@@ -1,0 +1,59 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    text-align: center;
+}
+
+body {
+    background-color: gray;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+title {
+    display: none;
+}
+
+.loading-sign {
+    font: 10em sans-serif;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    text-align: center;
+    line-height: 100vh;
+    vertical-align: middle;
+    border: 1px solid black;
+}
+
+.loading-sign > * {
+    background-color: white;
+    border-radius: 2vw;
+    text-align: center;
+    z-index: 1;
+}
+
+.loading-sign img {
+    width: 10vw;
+}
+
+.no-photos-sign {
+    display: none;
+    color: red;
+}
+
+.photos {
+    margin-top: auto;
+    border-top: 1px solid black;
+    overflow: hidden;
+    border-top-left-radius: 5vw;
+    border-top-right-radius: 5vw;
+}
+
+.photos * {
+    display: inline-block;
+    height: 10%;
+}

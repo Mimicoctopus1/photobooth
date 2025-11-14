@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Photobooth</title>
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+    <video class="video">Video stream not available.</video>
+    <img class="background" src="">
+    <img class="photo" src="" alt="The screen capture will appear in this box.">
+    <a class="qr-link"><div class="qr"></div></a>
+    <div class="footer">
+        <select class="background-select" name="background">
+            <option value="">No Background</option>
+            <option value="Fuzzy-Background.png">Fuzzy🐶</option>
+            <option value="Plant-Background.png">Plant</option>
+        </select>
+        <div class="countdown-container"><span class="countdown"></span></div>
+        <input type="button" class="capture" value="Take Picture 📷">
+        <input type="button" class="clear" value="Clear🗑️">
+    </div>
+    <canvas class="canvas"></canvas>
+
+    <script src="https://cdn.jsdelivr.net/gh/davidshimjs/qrcodejs/qrcode.js"></script>
+    <script src="index.js"></script>
+</body>
+</html>
