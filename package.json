@@ -1,5 +1,17 @@
 {
-  "dependencies": {
-    "merge-images": "^2.0.0"
-  }
+	"name": "photobooth",
+	"version": "1.0.0",
+	"description": "A JS photo booth.",
+	"main": "index.js",
+	"scripts": {
+		"dev": "nodemon index.js -- --verbose",
+		"start": "node index.js"
+	},
+	"author": "",
+	"license": "Unlicense",
+	"dependencies": {
+		"express": "^5.1.0",
+		"nodemon": "^1.10.0",
+		"ws": "^8.18.3"
+	}
 }
