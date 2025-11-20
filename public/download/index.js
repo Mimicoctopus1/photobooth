@@ -12,31 +12,45 @@ ws.addEventListener("open", function() {
 })
 
 ws.addEventListener("close", function() {
-    document.body.style.display = "none"
-    disconnected.style.display = "initial"
+    disconnected.style.display = "block"
 })
 
 ws.responses = {
     "download images": function(data) {
         photos.innerHTML = ""
         if(data.length <= 0) {
-            noPhotosSign.display = "block"
+            noPhotosSign.style.display = "block"
         }
-        data.forEach(function(photo) {
-            let img = document.createElement("img")
-            img.src = photo
-            photos.prepend(img)
-            img.style.width = "50vw"
-            img.addEventListener("click", function(event) {
-                loadingSign.style.display = "block"
+        data.forEach(function(photo, index) {
+            let imageContainer = document.createElement("div")
+            
+            let image = document.createElement("img")
+            image.src = photo
+
+            let triangle = document.createElement("div")
+            triangle.className = "triangle"
+
+            let imageNumber = document.createElement("div")
+            imageNumber.className = "image-number"
+            imageNumber.innerHTML = index
+            
+
+            photos.prepend(imageContainer)
+            imageContainer.append(image)
+            imageContainer.append(triangle)
+            imageContainer.append(imageNumber)
+            imageContainer.href = photo
+            imageContainer.download = Math.round(Math.random() * 10000) + ".png"
+            imageContainer.addEventListener("click", function(event) {
+                event.target.style.opacity = "0.5"
+                setTimeout(function() {
+                    event.target.style.opacity = "1"
+                }, 50)
                 let imageDownloader = document.createElement("a")
-                imageDownloader.href = this.src
-                imageDownloader.download = Math.round(Math.random() * 10000) + ".png"
+                imageDownloader.href = this.href
+                imageDownloader.download = this.download
                 imageDownloader.click()
                 delete imageDownloader
-                setTimeout(function() {
-                    loadingSign.style.display = "none"
-                }, 1000)
             })
         })
         loadingSign.style.display = "none"

@@ -16,6 +16,21 @@ title {
     display: none;
 }
 
+.disconnected {
+    font: 3vh sans-serif;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: white;
+    text-align: center;
+    line-height: 100vh;
+    vertical-align: middle;
+    display: none;
+    z-index: 3;
+}
+
 .loading-sign {
     font: 10em sans-serif;
     position: fixed;
@@ -27,13 +42,13 @@ title {
     line-height: 100vh;
     vertical-align: middle;
     border: 1px solid black;
+    z-index: 2;
 }
 
 .loading-sign > * {
     background-color: white;
     border-radius: 2vw;
     text-align: center;
-    z-index: 1;
 }
 
 .loading-sign img {
@@ -46,6 +61,7 @@ title {
 }
 
 .photos {
+    position: relative;
     margin-top: auto;
     border-top: 1px solid black;
     overflow: hidden;
@@ -54,6 +70,36 @@ title {
 }
 
 .photos * {
+    vertical-align: middle;
     display: inline-block;
     height: 10%;
+}
+
+.photos > * {
+    position: relative
+}
+
+.photos > * > img {
+    width: 50vw;
+}
+
+.photos > * > div {
+    position: absolute;
+    right: 0;
+    top: 0;
+    z-index: 1;
+}
+
+.triangle {
+    border-top: 1.5em solid white;
+    border-right: 1.5em solid white;
+    border-bottom: 1.5em solid transparent;
+    border-left: 1.5em solid transparent;
+    height: 0;
+    width: 0;
+}
+
+
+.image-number {
+    margin-right: 0.5em;
 }
