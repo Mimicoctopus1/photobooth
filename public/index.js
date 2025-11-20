@@ -1,6 +1,24 @@
 captureDelay = 3
+reloadEachTime = true
 
 ws = new WebSocket(document.location)
+
+width = window.innerWidth
+height = 0/*Will be computed later*/
+permission = false
+filtersSet = false
+
+disconnected = document.getElementsByClassName("disconnected")[0]
+video = document.getElementsByClassName("video")[0]
+canvas = document.getElementsByClassName("canvas")[0]
+photo = document.getElementsByClassName("photo")[0]
+background = document.getElementsByClassName("background")[0]
+qrLink = document.getElementsByClassName("qr-link")[0]
+qr = document.getElementsByClassName("qr")[0]
+countdown = document.getElementsByClassName("countdown")[0]
+backgroundSelect = document.getElementsByClassName("background-select")[0]
+captureButton = document.getElementsByClassName("capture")[0]
+clearButton = document.getElementsByClassName("clear")[0]
 
 ws.responses = {
   
@@ -14,21 +32,9 @@ ws.addEventListener("message", function(event) {
   }
 })
 
-width = window.innerWidth
-height = 0 /*Will be computed later*/
-permission = false
-filtersSet = false
-
-video = document.getElementsByClassName("video")[0]
-canvas = document.getElementsByClassName("canvas")[0]
-photo = document.getElementsByClassName("photo")[0]
-background = document.getElementsByClassName("background")[0]
-qrLink = document.getElementsByClassName("qr-link")[0]
-qr = document.getElementsByClassName("qr")[0]
-countdown = document.getElementsByClassName("countdown")[0]
-backgroundSelect = document.getElementsByClassName("background-select")[0]
-captureButton = document.getElementsByClassName("capture")[0]
-clearButton = document.getElementsByClassName("clear")[0]
+ws.addEventListener("close", function() {
+  disconnected.style.display = "block"
+})
 
 context = canvas.getContext("2d")
 
@@ -62,18 +68,22 @@ clearPicture = function() {
   clearButton.style.display = "none"
 }
 
+requestPermissions = function() {
+  navigator.mediaDevices
+    .getUserMedia({video: true, audio: false})
+    .then(function(stream) {
+      video.srcObject = stream
+      video.play()
+    })
+    .catch(function(error) {
+      console.error("An error occurred while getting permission for camera:" + error)
+    })
+}
+
 getPermissions = function() {
   navigator.permissions.query({"name": "camera"}).then(function(result) {
-    if(result.state == "prompt") {
-      navigator.mediaDevices
-      .getUserMedia({video: true, audio: false})
-      .then(function(stream) {
-        video.srcObject = stream
-        video.play()
-      })
-      .catch(function(error) {
-        console.error("An error occurred:" + error)
-      })
+    if(result.state == "prompt" || video.srcObject == null || typeof video.srcObject != "object") {
+      requestPermissions()
     }
   })
 }
@@ -109,6 +119,7 @@ takePicture = function() {
       qr.style.display = "inline-block"
       captureButton.style.display = "none"
       clearButton.style.display = "inline-block"
+      
       ws.send(JSON.stringify({
         "type": "save image",
         "data": photo.src
@@ -128,5 +139,11 @@ backgroundSelect.addEventListener("input", function() {
 
 getPermissions()
 clearPicture()
-clearButton.addEventListener("click", clearPicture)
+if(reloadEachTime) {
+  clearButton.addEventListener("click", function() {
+    location.reload()
+  })
+} else {
+  clearButton.addEventListener("click", clearPicture)
+}
 captureButton.addEventListener("click", takePicture)

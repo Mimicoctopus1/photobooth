@@ -66,6 +66,7 @@ wss.send = function(data) {
 	})
 }
 
+verbose("Loading photos from " + saveFile)
 fs.readFile(saveFile, "utf-8", function(error, data) {
 	if(error) {
 		photos = []
@@ -74,15 +75,27 @@ fs.readFile(saveFile, "utf-8", function(error, data) {
 	}
 })
 
-var messageResponses = {
-	"log": console.log,
-	"save image": function(data, ws) {
-		photos.push(data)
+saveImages = function() {
+	if(photos.length <= 0) {
+		fs.unlink(saveFile, function(error) {
+			if(error) {
+				console.log(error + "\n\nDoes that file exist?")
+			}
+		})
+	} else {
 		fs.writeFile(saveFile, photos.join("\n"), function(error) {
 			if(error) {
 				console.log(error)
 			}
 		})
+	}
+}
+
+var messageResponses = {
+	"log": console.log,
+	"save image": function(data, ws) {
+		photos.push(data)
+		saveImages()
 	},
 	"download images": function(data, ws) {
 		ws.send(JSON.stringify({
@@ -94,8 +107,6 @@ var messageResponses = {
 
 verbose("Setting up WebSocket events")
 wss.on("connection", function(ws) {
-	verbose(wss.clients.size + " users  +")
-
 	ws.addEventListener("message", function(event) {
 		let type = JSON.parse(event.data).type
 		let data = JSON.parse(event.data).data
@@ -103,7 +114,6 @@ wss.on("connection", function(ws) {
 	})
 	
 	ws.addEventListener("close", function() {
-		verbose(wss.clients.size + " users  -")
 		wss.send(JSON.stringify({
 			"type": "population update",
 			"data": wss.clients.size
@@ -112,26 +122,73 @@ wss.on("connection", function(ws) {
 })
 
 stdinResponses = {
-	"population": function() {
+	"population": function(words) {
 		console.log(wss.clients.size + " users  =")
 	},
-	"images": function() {
+	"images": function(words) {
 		console.log(photos.length + " imgs   =")
 	},
-	"delete": function() {
-		photos = []
-		fs.unlink(saveFile, function(error) {
+	"backup": function(words) {
+		fs.readFile(saveFile, "utf-8", function(error, data) {
 			if(error) {
-				console.log(error + "\n\nDoes that file exist?")
+				console.log(error)
+			} else {
+				let backupTo = words[1] || saveFile + ".old"
+				fs.writeFile(saveFile, data, function(error) {
+					if(error) {
+						console.log(error)
+					}
+				})
 			}
+		})
+	},
+	"load": function(words) {
+		let loadFrom = words[1] || saveFile + ".old"
+		fs.readFile(loadFrom, "utf-8", function(error, data) {
+			if(error) {
+				console.log(error)
+			} else {
+				let newPhotos = data.split("\n")
+				newPhotos.concat(photos)
+				photos = newPhotos
+				saveImages()
+			}
+		})
+	},
+	"delete": function(words) {
+		if(words[1]) {
+			words.slice(1).forEach(function(photo) {
+				if(photo.includes("@")) {
+					let start = parseInt(photo.split("@")[1])
+					let amount = parseInt(photo.split("@")[0])
+					
+					photos.splice(start, amount)
+				} else if(photo.includes("-")) {
+					let start = parseInt(photo.split("-")[0])
+					let end = parseInt(photo.split("-")[1])
+					let amount = Math.abs(end - start) + 1
+
+					photos.splice(start, amount)
+				} else {
+					photos.splice(parseInt(photo), 1)
+				}
+			})
+		} else {
+			photos = []
+		}
+		saveImages()
+	},
+	"kick": function(words) {
+		wss.clients.forEach(function(ws) {
+			ws.close()
 		})
 	}
 }
 
 var readInput = function() {
 	rl.question("", function(answer) {
-		if(stdinResponses[answer]) {
-			stdinResponses[answer]()
+		if(answer.split(" ")[0] in stdinResponses) {
+			stdinResponses[answer.split(" ")[0]](answer.split(" "))
 		}
 		readInput()
 	})
@@ -140,7 +197,7 @@ readInput()
 
 verbose("______________________________________________________               🛸")
 verbose("|  __       __  _____    __            _____  _____  |   ✨   👾👾")
-verbose("| |  |     |__|/  ___| _|  |_   ____  |  ___||  ___| |         👾")
+verbose("| |  |     |__||  ___| _|  |_   ____  |  ___||  ___| |         👾")
 verbose("| |  |      __ |  ___||_    _| /    \\ |  ___||  ___| |               ✨")
 verbose("| |  |___  |  ||  |     |  |  |  (O) ||  |   |  |    |    🚀")
 verbose("| |______| |__||__|     |__|   \\____/ |__|   |__|    |           ✨")
