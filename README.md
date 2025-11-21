@@ -11,6 +11,15 @@ Features include:
 To-do list:
 * Automatic printing
 
+# Installation
+Simply install [Node.js](https://nodejs.org) and run these commands in your terminal.
+```bash
+git clone https://codeberg.org/Mimicoctopus1/photobooth
+cd photobooth
+npm install
+npm run start # Alternatively, index.js has a shebang so you can double-click it from your file manager if you give yourself permission
+```
+
 # Backgrounds
 Backgrounds are stored in [`public/backgrounds`](public/backgrounds) as `.png` files. To make your own, follow these steps:
 * Take a picture of the background, draw it on your computer, or get it in some way.
