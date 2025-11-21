@@ -1,3 +1,4 @@
+#!/bin/env node
 saveFile = process.env.saveFile || "photos.txt"
 verbose = function() {}
 
