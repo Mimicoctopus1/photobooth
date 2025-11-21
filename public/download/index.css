@@ -60,6 +60,14 @@ title {
     color: red;
 }
 
+.download-prepper {
+    display: none;
+}
+
+.downloader {
+    display: none;
+}
+
 .photos {
     position: relative;
     margin-top: auto;

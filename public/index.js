@@ -119,7 +119,6 @@ takePicture = function() {
       qr.style.display = "inline-block"
       captureButton.style.display = "none"
       clearButton.style.display = "inline-block"
-      
       ws.send(JSON.stringify({
         "type": "save image",
         "data": photo.src

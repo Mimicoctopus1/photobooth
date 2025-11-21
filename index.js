@@ -30,6 +30,7 @@ verbose("|node:readline")
 var readline = require("node:readline")
 verbose("|node:fs")
 var fs = require("node:fs")
+const { arrayBuffer } = require("node:stream/consumers")
 
 var rl = readline.createInterface({
 	"input": process.stdin,
@@ -124,22 +125,15 @@ wss.on("connection", function(ws) {
 
 stdinResponses = {
 	"population": function(words) {
-		console.log(wss.clients.size + " users  =")
+		console.log(wss.clients.size + " users")
 	},
 	"images": function(words) {
-		console.log(photos.length + " imgs   =")
+		console.log(photos.length + " imgs")
 	},
 	"backup": function(words) {
-		fs.readFile(saveFile, "utf-8", function(error, data) {
+		fs.writeFile(words[1] || saveFile + ".old", photos.join("\n"), function(error) {
 			if(error) {
 				console.log(error)
-			} else {
-				let backupTo = words[1] || saveFile + ".old"
-				fs.writeFile(saveFile, data, function(error) {
-					if(error) {
-						console.log(error)
-					}
-				})
 			}
 		})
 	},
@@ -163,20 +157,25 @@ stdinResponses = {
 					let start = parseInt(photo.split("@")[1])
 					let amount = parseInt(photo.split("@")[0])
 					
-					photos.splice(start, amount)
+					photos.splice(start, amount, ...Array(amount).fill(""))
 				} else if(photo.includes("-")) {
 					let start = parseInt(photo.split("-")[0])
 					let end = parseInt(photo.split("-")[1])
 					let amount = Math.abs(end - start) + 1
 
-					photos.splice(start, amount)
+					photos.splice(start, amount, ...Array(amount).fill(""))
 				} else {
-					photos.splice(parseInt(photo), 1)
+					photos[parseInt(photo)] = ""
 				}
 			})
 		} else {
 			photos = []
 		}
+		
+		photos = photos.filter(function(photo) {
+			return (photo != "")
+		})
+
 		saveImages()
 	},
 	"kick": function(words) {
