@@ -3,8 +3,10 @@ This is a photobooth made in Node.js and the ws and express modules
 Features include:
 * Support for [backgrounds](#backgrounds)
 * A pre-set background just for proof
+* Live population and number-of-saved-images monitor
 * Customizable capture delay timer
 * Download page
+* Add [filters](#filters) like contrast, brightness, and blur
 * Photos stored as a txt file
 * Easy server-side TUI for erasing captures and saving archives
 
@@ -32,6 +34,18 @@ Backgrounds are stored in [`public/backgrounds`](public/backgrounds) as `.png` f
 ```html
 <option value="name-in-background-folder.png">Title</option>
 ```
+
+# Filters
+Most CSS filters can be added in the download page. Some that were excluded are grayscale (because we have saturation) and url (because your average individual will be absolutely befuddled).
+Filters that are included:
+* Color Inversion
+* Blur
+* Opacity
+* Hue Rotation
+* Brightness
+* Contrast
+* Saturation
+* Sepia
 
 # Other Ports
 You can make a `.env` file and add this:
