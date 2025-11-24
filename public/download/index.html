@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <title>Download</title>
     <link rel="stylesheet" href="index.css">
+    <!--This makes filters for canvas elements work on Safari.-->
+    <script src="https://cdn.jsdelivr.net/npm/context-filter-polyfill/dist/index.min.js"></script>
 </head>
 <body>
     <div class="disconnected"><span>You have been disconnected. <a href=".">Refresh</a> to try to rejoin.</span></div>
@@ -11,6 +13,53 @@
     <div><a href=".">Refresh</a> to update and get new photos.</div>
     <h1 class="loading-sign"><span>Loading...</span></h1>
     <h1 class="no-photos-sign">No photos. Please refresh to load new photos after they are taken.</h1>
+    <footer class="footer">
+        <button class="reset">
+            Reset Filters
+        </button>
+        <div>
+            <label for="filename-chooser">Download with filename:</label>
+            <input class="filename-chooser" id="filename-chooser" placeholder="123.png">
+        </div>
+        <div>
+            <label for="inverter">Color Inversion</label>
+            <input class="inverter" id="inverter" type="range" min="0" max="100" step="1" value="0">
+        </div>
+        <div>
+            <label for="blurrer">Blur</label>
+            <input class="blurrer" id="blurrer" type="range" min="0" max="100" step="1" value="0">
+            <small>⚠️Preview is Inaccurate</small>
+        </div>
+        <div>
+            <label for="opacitier">Opacity</label>
+            <input class="opacitier" id="opaicitier" type="range" min="0" max="100" step="1" value="100">
+            <small>(Not-See-Through-Ness)</small>
+        </div>
+        <div>
+            <label for="hue-rotator">Hue Rotation</label>
+            <input class="hue-rotator" id="hue-rotator" type="range" min="0" max="360" step="1" value="0">
+            <small>Moves Hues Through Color Wheel</small>
+        </div>
+        <div>
+            <label for="brightener">Brightness</label>
+            <input class="brightener" id="brightener" type="range" min="0" max="200" step="1" value="100">
+        </div>
+        <div>
+            <label for="contrastor">Contrast</label>
+            <input class="contrastor" id="contrastor" type="range" min="0" max="200" step="1" value="100">
+            <small>Darker Dark & Lighter Light</small>
+        </div>
+        <div>
+            <label for="saturator">Saturation</label>
+            <input class="saturator" id="saturator" type="range" min="0" max="200" step="1" value="100">
+            <small>Color Amount</small>
+        </div>
+        <div>
+            <label for="sepiator">Sepia</label>
+            <input class="sepiator" id="sepiator" type="range" min="0" max="100" step="1" value="0">
+            <small>Stains Brown</small>
+        </div>
+    </footer>
     <canvas class="download-prepper"></canvas>
     <a class="downloader"></a>
     <div class="photos">

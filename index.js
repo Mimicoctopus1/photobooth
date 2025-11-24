@@ -30,7 +30,6 @@ verbose("|node:readline")
 var readline = require("node:readline")
 verbose("|node:fs")
 var fs = require("node:fs")
-const { arrayBuffer } = require("node:stream/consumers")
 
 var rl = readline.createInterface({
 	"input": process.stdin,

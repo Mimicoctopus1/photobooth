@@ -1,8 +1,20 @@
 ws = new WebSocket(document.location)
 
+disconnected = document.getElementsByClassName("disconnected")[0]
 loadingSign = document.getElementsByClassName("loading-sign")[0]
 noPhotosSign = document.getElementsByClassName("no-photos-sign")[0]
 photos = document.getElementsByClassName("photos")[0]
+footerInput = document.querySelectorAll(".footer input")
+inverter = document.getElementsByClassName("inverter")[0]
+blurrer = document.getElementsByClassName("blurrer")[0]
+opacatier = document.getElementsByClassName("opacitier")[0]
+hueRotator = document.getElementsByClassName("hue-rotator")[0]
+brightener = document.getElementsByClassName("brightener")[0]
+contrastor = document.getElementsByClassName("contrastor")[0]
+saturator = document.getElementsByClassName("saturator")[0]
+sepiator = document.getElementsByClassName("sepiator")[0]
+filenameChooser = document.getElementsByClassName("filename-chooser")[0]
+reset = document.getElementsByClassName("reset")[0]
 downloadPrepper = document.getElementsByClassName("download-prepper")[0]
 downloader = document.getElementsByClassName("downloader")[0]
 
@@ -47,9 +59,18 @@ ws.responses = {
                     loadingSign.style.display = "block"
                     downloadPrepper.width = this.naturalWidth
                     downloadPrepper.height = this.naturalHeight
+                    context.filter = filter
                     context.drawImage(this, 0, 0, this.naturalWidth, this.naturalHeight)
                     downloadPrepper.toBlob(function(blob) {
-                        download = new File([blob], Math.floor(Math.random() * 1000000) + ".png")
+                        if(filenameChooser.value == "") {
+                            filename = (Math.random() + ".png").slice(2)
+                        } else {
+                            filename = filenameChooser.value
+                            if(filename.slice(-4) != ".png") {
+                                filename += ".png"
+                            }
+                        }
+                        download = new File([blob], filename)
                         downloadURL = URL.createObjectURL(download)
                         downloader.href = downloadURL
                         downloader.download = download.name
@@ -57,9 +78,7 @@ ws.responses = {
                         URL.revokeObjectURL(downloadURL)
                         loadingSign.style.display = "none"
                     })
-
                 })
-                console.log(document.body.innerHTML)
             })
         }
         loadingSign.style.display = "none"
@@ -72,4 +91,25 @@ ws.addEventListener("message", function(event) {
     if(ws.responses[type]) {
         ws.responses[type](data)
     }
+})
+
+updateFilter = function() {
+    filter = "invert(" + inverter.value + "%) blur(" + blurrer.value + "px) opacity(" + opacatier.value + "%) hue-rotate(" + hueRotator.value + "deg) brightness(" + brightener.value + "%) contrast(" + contrastor.value + "%) saturate(" + saturator.value + "%) sepia(" + sepiator.value + "%)"
+
+    photos.childNodes.forEach(function(photo, index) {
+        photo.style.filter = filter
+    })
+}
+
+footerInput.forEach(function(element, index) {
+    element.addEventListener("input", function() {
+        updateFilter()
+    })
+})
+
+reset.addEventListener("click", function() {
+    footerInput.forEach(function(element, index) {
+        element.value = element.defaultValue
+    })
+    updateFilter()
 })

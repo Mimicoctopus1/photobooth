@@ -59,7 +59,8 @@ title {
   border: 5px solid black;
   border-top-left-radius: 5vw;
   border-top-right-radius: 5vw;
-  background: rgba(0, 0, 0, 0.3)
+  background: rgba(0, 0, 0, 0.3);
+  overflow: hidden;
 }
 
 .footer * {
@@ -67,7 +68,6 @@ title {
   background-color: rgba(80, 80, 80, 0.9);
   height: 10vh;
   max-height: 10vh;
-  vertical-align: text-bottom;
   border: 1px solid rgba(0, 0, 0, 1);
   border-radius: 0;
   font: 2em sans-serif;
@@ -79,10 +79,6 @@ title {
   left: 0;
   display: none;
   z-index: 2
-}
-
-.background-select {
-  border-top-left-radius: 5vw;
 }
 
 .qr {
@@ -109,7 +105,6 @@ title {
   color: green;
   flex-grow: 1;
   flex-shrink: 1;
-  border-top-right-radius: 5vw;
 }
 
 .clear {
@@ -117,7 +112,6 @@ title {
   color: red;
   flex-grow: 1;
   flex-shrink: 1;
-  border-top-right-radius: 5vw;
 }
 
 .canvas {

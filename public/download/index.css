@@ -16,6 +16,10 @@ title {
     display: none;
 }
 
+small {
+    font-size: 0.5em;
+}
+
 .disconnected {
     font: 3vh sans-serif;
     position: fixed;
@@ -24,7 +28,6 @@ title {
     width: 100vw;
     height: 100vh;
     background-color: white;
-    text-align: center;
     line-height: 100vh;
     vertical-align: middle;
     display: none;
@@ -58,6 +61,49 @@ title {
 .no-photos-sign {
     display: none;
     color: red;
+}
+
+.footer {
+    white-space: nowrap;
+    position: fixed;
+    width: 100vw;
+    bottom: 0;
+    left: 0;
+    display: flex;
+    z-index: 2;
+    border: 5px solid black;
+    border-top-left-radius: 5vw;
+    border-top-right-radius: 5vw;
+    background: rgba(0, 0, 0, 0.3);
+    overflow-y: hidden;
+    overflow-x: scroll;
+}
+
+.footer > * {
+    font: 2rem sans-serif;
+    padding-left: 3vw;
+    padding-right: 3vw;
+    display: inline-block;
+    border-radius: 0;
+    background-color: rgba(80, 80, 80, 0.9);
+    height: 10vh;
+    vertical-align: middle;
+    border: 1px solid rgba(0, 0, 0, 1);
+}
+
+.footer > * > * {
+    display: block;
+}
+
+.footer > * > input {
+    width: 100%;
+    height: 2em;
+}
+
+.reset {
+    color: red;
+    flex-grow: 1;
+    flex-shrink: 1;
 }
 
 .download-prepper {
