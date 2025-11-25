@@ -181,11 +181,18 @@ stdinResponses = {
 			photos = []
 		}
 		
+		let deletedPhotos = 0
 		photos = photos.filter(function(photo) {
+			if(photo == "") {
+				deletedPhotos ++
+			}
 			return (photo != "")
 		})
 
 		saveImages()
+
+		console.log("Deleted " + deletedPhotos + " photos")
+		console.log(photos.length + " photos remaining")
 	},
 	"kick": function(words) {
 		wss.clients.forEach(function(ws) {
