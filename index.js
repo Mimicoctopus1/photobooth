@@ -108,6 +108,16 @@ var messageResponses = {
 
 verbose("Setting up WebSocket events")
 wss.on("connection", function(ws) {
+	fs.readdir("public/assets", "utf-8", function(error, data) {
+		if(error) {
+			console.error(error)
+		}
+		ws.send(JSON.stringify({
+			"type": "foregrounds",
+			"data": data
+		}))
+	})
+
 	ws.addEventListener("message", function(event) {
 		let type = JSON.parse(event.data).type
 		let data = JSON.parse(event.data).data

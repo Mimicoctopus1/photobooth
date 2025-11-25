@@ -7,7 +7,7 @@
 }
 
 body {
-  background-color: gray;
+  background: gray;
 }
 
 title {
@@ -22,7 +22,7 @@ title {
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-color: white;
+  background: white;
   text-align: center;
   line-height: 100vh;
   vertical-align: middle;
@@ -41,7 +41,7 @@ title {
   transform: scaleX(-1);
 }
 
-.background {
+.foreground {
   display: none;
   position: fixed;
   top: 0;

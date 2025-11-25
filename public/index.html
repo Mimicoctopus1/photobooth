@@ -9,18 +9,12 @@
 <body>
     <div class="disconnected"><span>You have been disconnected. <a href=".">Refresh</a> to try to rejoin.</span></div>
     <video class="video">Video stream not available.</video>
-    <img class="background" src="">
+    <img class="foreground" src="">
     <img class="photo" src="" alt="The screen capture will appear in this box.">
     <a class="qr-link"><div class="qr"></div></a>
     <footer class="footer">
-        <select class="background-select" name="background">
-            <option value="">No Background</option>
-            <option value="fuzzy.png">Fuzzy🐶</option>
-            <!--
-            PUT BACKGROUNDS HERE USING THIS FORMAT
-            <option value="name-in-background-folder.png">Title</option>
-            Files come from the "backgrounds" folder
-            -->
+        <select class="foreground-select">
+            <option value="">No Foreground</option>
         </select>
         <div class="countdown-container"><span class="countdown"></span></div>
         <input type="button" class="capture" value="Take Picture 📷">

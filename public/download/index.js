@@ -19,6 +19,7 @@ downloadPrepper = document.getElementsByClassName("download-prepper")[0]
 downloader = document.getElementsByClassName("downloader")[0]
 
 context = downloadPrepper.getContext("2d")
+filter = ""
 
 ws.addEventListener("open", function() {
     ws.send(JSON.stringify({
@@ -59,7 +60,6 @@ ws.responses = {
                     loadingSign.style.display = "block"
                     downloadPrepper.width = this.naturalWidth
                     downloadPrepper.height = this.naturalHeight
-                    context.filter = filter
                     context.drawImage(this, 0, 0, this.naturalWidth, this.naturalHeight)
                     downloadPrepper.toBlob(function(blob) {
                         if(filenameChooser.value == "") {

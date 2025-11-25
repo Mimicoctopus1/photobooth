@@ -12,16 +12,25 @@ disconnected = document.getElementsByClassName("disconnected")[0]
 video = document.getElementsByClassName("video")[0]
 canvas = document.getElementsByClassName("canvas")[0]
 photo = document.getElementsByClassName("photo")[0]
-background = document.getElementsByClassName("background")[0]
+foreground = document.getElementsByClassName("foreground")[0]
 qrLink = document.getElementsByClassName("qr-link")[0]
 qr = document.getElementsByClassName("qr")[0]
 countdown = document.getElementsByClassName("countdown")[0]
-backgroundSelect = document.getElementsByClassName("background-select")[0]
+foregroundSelect = document.getElementsByClassName("foreground-select")[0]
 captureButton = document.getElementsByClassName("capture")[0]
 clearButton = document.getElementsByClassName("clear")[0]
 
 ws.responses = {
-  
+	"foregrounds": function(data) {
+		data.forEach(function(foregroundName, index) {
+			let foregroundElement = document.createElement("option")
+			foregroundElement.innerHTML = foregroundName.replace(/\..*/, "")
+				.replace("-", " ")
+				.replace("_", " ")
+			foregroundElement.value = "assets/" + foregroundName
+			foregroundSelect.appendChild(foregroundElement)
+		})
+	}
 }
 
 ws.addEventListener("message", function(event) {
@@ -53,8 +62,8 @@ video.addEventListener("canplay", function(event) {
     video.height = height
     canvas.width = width
     canvas.height = height
-    background.width = width
-    background.height = height
+    foreground.width = width
+    foreground.height = height
   }
 })
 
@@ -111,8 +120,8 @@ takePicture = function() {
       context.scale(-1, 1)
       context.drawImage(video, 0, 0, -width, height)
       context.restore()
-      if(backgroundSelect.value != "") {
-        context.drawImage(background, 0, 0, width, height)
+      if(foregroundSelect.value != "") {
+        context.drawImage(foreground, 0, 0, width, height)
       }
       photo.src = canvas.toDataURL("image/png")
       photo.style.display = "inline-block"
@@ -127,12 +136,12 @@ takePicture = function() {
   }, 1000)
 }
 
-backgroundSelect.addEventListener("input", function() {
-  if(backgroundSelect.value) {
-    background.src = "backgrounds/" + backgroundSelect.value
-    background.style.display = "initial"
+foregroundSelect.addEventListener("input", function() {
+  if(foregroundSelect.value) {
+    foreground.src = foregroundSelect.value
+    foreground.style.display = "initial"
   } else {
-    background.style.display = "none"
+    foreground.style.display = "none"
   }
 })
 

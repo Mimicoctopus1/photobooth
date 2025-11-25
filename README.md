@@ -1,8 +1,8 @@
 # Photobooth
 This is a photobooth made in Node.js and the ws and express modules
 Features include:
-* Support for [backgrounds](#backgrounds)
-* A pre-set background just for proof
+* Support for [foregrounds](#foregrounds)
+* A pre-set foreground just for proof
 * Live population and number-of-saved-images monitor
 * Customizable capture delay timer
 * Download page
@@ -24,15 +24,13 @@ npm run start # Alternatively, index.js has a shebang so you can double-click it
 Then, open up [your ip address]:8080.  
 See [here](#other-ports) to use other ports
 
-# Backgrounds
-Backgrounds are stored in [`public/backgrounds`](public/backgrounds) as `.png` files. To make your own, follow these steps:
-* Take a picture of the background, draw it on your computer, or get it in some way.
-* Remove the background so it is transparent. If you don't want to install anything, you can use tools online like [remove.bg](https://www.remove.bg) (note that the free version images are not high resolution, but they're not that bad).
+# Foregrounds
+Foregrounds are stored in [`public/assets`](public/foregrounds) as `.png` files. To make your own, follow these steps:
+* Take a picture of the foreground, draw it on your computer, or get it in some way.
+* Remove the background of the foreground so it is transparent. If you don't want to install anything, you can use tools online like [remove.bg](https://www.remove.bg) (note that the free version images are not high resolution, but they're not that bad).
 * Make sure it is in `png`, `jpg`, or `webp` format, or something else that is compatible with your average browser. Again, there are services online for this like [CloudConvert](https://cloudconvert.com).
-* Put it in [`public/backgrounds`](public/backgrounds).
-* Go into [`public/index.html`](public/index.html), find the comment that shows you what code to add, and add the code:
-```html
-<option value="name-in-background-folder.png">Title</option>
+* Name the file. In the actual photobooth, any hypens ("-") will be replaced with spaces, and the first period (".") and anything after it will be removed.
+* Put it in [`public/assets`](public/assets).
 ```
 
 # Filters
