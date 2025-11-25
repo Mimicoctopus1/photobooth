@@ -160,6 +160,10 @@ stdinResponses = {
 		})
 	},
 	"delete": function(words) {
+		if(Math.random() > 0.9) {
+			console.log("Yes boss.🫡")
+		}
+
 		if(words[1]) {
 			words.slice(1).forEach(function(photo) {
 				if(photo.includes("@")) {
