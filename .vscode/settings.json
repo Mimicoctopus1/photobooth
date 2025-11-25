@@ -1,0 +1,8 @@
+{
+	"IDX.aI.enableInlineCompletion": true,
+	"IDX.aI.enableCodebaseIndexing": true,
+	"editor.detectIndentation": false,
+	"editor.tabSize": 2,
+	"editor.insertSpaces": false,
+	"git.autofetch": true
+}
