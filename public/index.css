@@ -16,7 +16,7 @@ title {
 
 .disconnected {
   font: 3vh sans-serif;
-  z-index: 3;
+  z-index: 999;
   position: fixed;
   top: 0;
   left: 0;
@@ -54,7 +54,7 @@ title {
   bottom: 0;
   left: 0;
   display: flex;
-  z-index: 2;
+  z-index: 3;
   border: 5px solid black;
   border-top-left-radius: 5vw;
   border-top-right-radius: 5vw;
@@ -72,20 +72,12 @@ title {
   font: 2em sans-serif;
 }
 
-.photo {
-  position: fixed;
-  top: 0;
-  left: 0;
-  display: none;
-  z-index: 2
-}
-
 .qr {
   position: fixed;
   top: 0;
   right: 0;
   display: none;
-  z-index: 3
+  z-index: 4;
 }
 
 .countdown-container {
@@ -111,4 +103,9 @@ title {
   color: red;
   flex-grow: 1;
   flex-shrink: 1;
+}
+
+.canvas {
+	position: fixed;
+	z-index: 2;
 }

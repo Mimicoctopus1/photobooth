@@ -13,7 +13,6 @@ filtersSet = false
 disconnected = document.getElementsByClassName("disconnected")[0]
 video = document.getElementsByClassName("video")[0]
 canvas = document.getElementsByClassName("canvas")[0]
-photo = document.getElementsByClassName("photo")[0]
 foreground = document.getElementsByClassName("foreground")[0]
 qrLink = document.getElementsByClassName("qr-link")[0]
 qr = document.getElementsByClassName("qr")[0]
@@ -74,9 +73,6 @@ video.addEventListener("canplay", function(event) {
 
 clearPicture = function() {
   context.clearRect(0, 0, canvas.width, canvas.height)
-  const data = canvas.toDataURL("image/png")
-  photo.src = data
-  photo.style.display = "none"
   qr.style.display = "none"
   captureButton.style.display = "inline-block"
   clearButton.style.display = "none"
@@ -130,14 +126,12 @@ takePicture = function() {
 			if(foregroundSelect.value != "") {
         context.drawImage(foreground, 0, 0, width, height)
       }
-      photo.src = canvas.toDataURL("image/png")
-      photo.style.display = "inline-block"
       qr.style.display = "inline-block"
       captureButton.style.display = "none"
       clearButton.style.display = "inline-block"
       ws.send(JSON.stringify({
         "type": "save image",
-        "data": photo.src
+        "data": canvas.toDataURL("image/png")
       }))
     }
   }, 1000)
