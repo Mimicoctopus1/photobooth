@@ -1,5 +1,7 @@
 captureDelay = 3
 reloadEachTime = true
+flipVideo = true
+cameraFacing = "user" /*"user" or "environment*/
 
 ws = new WebSocket(document.location)
 
@@ -46,6 +48,9 @@ ws.addEventListener("close", function() {
 })
 
 context = canvas.getContext("2d")
+if(flipVideo) {
+	video.style.transform = "scaleX(-1)"
+}
 
 qrcode = new QRCode(qr, {
   text: document.location + "/download",
@@ -79,7 +84,7 @@ clearPicture = function() {
 
 requestPermissions = function() {
   navigator.mediaDevices
-    .getUserMedia({video: true, audio: false})
+    .getUserMedia({video: {facingMode: {exact: cameraFacing}}, audio: false})
     .then(function(stream) {
       video.srcObject = stream
       video.play()
@@ -116,11 +121,13 @@ takePicture = function() {
         filtersSet = true
       }
       
-      context.save()
-      context.scale(-1, 1)
-      context.drawImage(video, 0, 0, -width, height)
-      context.restore()
-      if(foregroundSelect.value != "") {
+			if(flipVideo) {
+				context.save()
+      	context.scale(-1, 1)
+      	context.drawImage(video, 0, 0, -width, height)
+				context.restore()
+			}
+			if(foregroundSelect.value != "") {
         context.drawImage(foreground, 0, 0, width, height)
       }
       photo.src = canvas.toDataURL("image/png")

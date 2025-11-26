@@ -38,7 +38,6 @@ title {
   top: 0;
   width: 100vw;
   z-index: 0;
-  transform: scaleX(-1);
 }
 
 .foreground {
@@ -112,8 +111,4 @@ title {
   color: red;
   flex-grow: 1;
   flex-shrink: 1;
-}
-
-.canvas {
-  display: none;
 }
