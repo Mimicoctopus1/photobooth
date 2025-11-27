@@ -7,7 +7,7 @@ Features include:
 * Customizable capture delay timer
 * Download page
 * Add [filters](#filters) like contrast, brightness, and blur
-* Photos stored as a txt file
+* Photos (PNG format) stored as binary strings in memory as well as in .data/photos
 * Easy server-side TUI for erasing captures and saving archives
 
 To-do list:
@@ -31,7 +31,6 @@ Foregrounds are stored in [`public/assets`](public/foregrounds) as `.png` files.
 * Make sure it is in `png`, `jpg`, or `webp` format, or something else that is compatible with your average browser. Again, there are services online for this like [CloudConvert](https://cloudconvert.com).
 * Name the file. In the actual photobooth, any hypens ("-") will be replaced with spaces, and the first period (".") and anything after it will be removed.
 * Put it in [`public/assets`](public/assets).
-```
 
 # Filters
 Most CSS filters can be added in the download page. Some that were excluded are grayscale (because we have saturation) and url (because your average individual will be absolutely befuddled).
@@ -47,19 +46,31 @@ Filters that are included:
 
 # Other Ports
 You can make a `.env` file and add this:
-```
-PORT=[your port here]
+```bash
+PORT=<your port here>
 ```
 or run either of these:
 ```bash
-npm run start -- --port [your port here]
-PORT=[your port here] npm run start
+npm run start -- --port <your port here>
+PORT=<your port here> npm run start
+```
+
+# Image Folder
+You can make a `.env` file and add this:
+```bash
+SAVEFOLDER=<folder to use>
+```
+or run either of these
+```bash
+npm run start -- --save-folder <folder to use>
+npm run start -- -s <folder to use>
+SAVEFOLDER=<folder to use> npm run start
 ```
 
 # Verbose
 To get a bunch of details, use the `--verbose` flag.
 ```bash
-npm run start --verbose
+npm run start -- --verbose
 ```
 
 # Live Commands

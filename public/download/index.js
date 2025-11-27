@@ -33,56 +33,56 @@ ws.addEventListener("close", function() {
 })
 
 ws.responses = {
-    "download images": function(data) {
-        photos.innerHTML = ""
-        if(data.length <= 0) {
-            noPhotosSign.style.display = "block"
-        } else {
-            data.forEach(function(photo, index) {
-                let imageContainer = document.createElement("div")
-                
-                let image = document.createElement("img")
-                image.src = photo
+	"download images": function(data) {
+		photos.innerHTML = ""
+		if(data.length <= 0) {
+			noPhotosSign.style.display = "block"
+		} else {
+			data.forEach(function(photo, index) {
+				let imageContainer = document.createElement("div")
+				
+				let image = document.createElement("img")
+				image.src = photo
 
-                let triangle = document.createElement("div")
-                triangle.className = "triangle"
+				let triangle = document.createElement("div")
+				triangle.className = "triangle"
 
-                let imageNumber = document.createElement("div")
-                imageNumber.className = "image-number"
-                imageNumber.innerHTML = index
-                
+				let imageNumber = document.createElement("div")
+				imageNumber.className = "image-number"
+				imageNumber.innerHTML = index
+				
 
-                photos.prepend(imageContainer)
-                imageContainer.append(image)
-                imageContainer.append(triangle)
-                imageContainer.append(imageNumber)
-                image.addEventListener("click", function(event) {
-                    loadingSign.style.display = "block"
-                    downloadPrepper.width = this.naturalWidth
-                    downloadPrepper.height = this.naturalHeight
-                    context.drawImage(this, 0, 0, this.naturalWidth, this.naturalHeight)
-                    downloadPrepper.toBlob(function(blob) {
-                        if(filenameChooser.value == "") {
-                            filename = (Math.random() + ".png").slice(2)
-                        } else {
-                            filename = filenameChooser.value
-                            if(filename.slice(-4) != ".png") {
-                                filename += ".png"
-                            }
-                        }
-                        download = new File([blob], filename)
-                        downloadURL = URL.createObjectURL(download)
-                        downloader.href = downloadURL
-                        downloader.download = download.name
-                        downloader.click()
-                        URL.revokeObjectURL(downloadURL)
-                        loadingSign.style.display = "none"
-                    })
-                })
-            })
-        }
-        loadingSign.style.display = "none"
-    }
+				photos.prepend(imageContainer)
+				imageContainer.append(image)
+				imageContainer.append(triangle)
+				imageContainer.append(imageNumber)
+				image.addEventListener("click", function(event) {
+					loadingSign.style.display = "block"
+					downloadPrepper.width = this.naturalWidth
+					downloadPrepper.height = this.naturalHeight
+					context.drawImage(this, 0, 0, this.naturalWidth, this.naturalHeight)
+					downloadPrepper.toBlob(function(blob) {
+						if(filenameChooser.value == "") {
+							filename = (Date.now() + ".png").slice(2)
+						} else {
+							filename = filenameChooser.value
+							if(filename.slice(-4) != ".png") {
+								filename += ".png"
+							}
+						}
+						download = new File([blob], filename)
+						downloadURL = URL.createObjectURL(download)
+						downloader.href = downloadURL
+						downloader.download = download.name
+						downloader.click()
+						URL.revokeObjectURL(downloadURL)
+						loadingSign.style.display = "none"
+					})
+				})
+			})
+		}
+		loadingSign.style.display = "none"
+	}
 }
 
 ws.addEventListener("message", function(event) {
