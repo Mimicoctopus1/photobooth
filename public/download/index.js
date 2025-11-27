@@ -15,10 +15,8 @@ saturator = document.getElementsByClassName("saturator")[0]
 sepiator = document.getElementsByClassName("sepiator")[0]
 filenameChooser = document.getElementsByClassName("filename-chooser")[0]
 reset = document.getElementsByClassName("reset")[0]
-downloadPrepper = document.getElementsByClassName("download-prepper")[0]
 downloader = document.getElementsByClassName("downloader")[0]
 
-context = downloadPrepper.getContext("2d")
 filter = ""
 
 ws.addEventListener("open", function() {
@@ -43,6 +41,12 @@ ws.responses = {
 				
 				let image = document.createElement("img")
 				image.src = photo
+				
+				let canvas = document.createElement("canvas")
+				let context = canvas.getContext("2d")
+				canvas.width = image.naturalWidth
+				canvas.height = image.naturalHeight
+				context.drawImage(image, 0, 0, canvas.width, canvas.height)
 
 				let triangle = document.createElement("div")
 				triangle.className = "triangle"
@@ -51,17 +55,13 @@ ws.responses = {
 				imageNumber.className = "image-number"
 				imageNumber.innerHTML = index
 				
-
 				photos.prepend(imageContainer)
-				imageContainer.append(image)
+				imageContainer.append(canvas)
 				imageContainer.append(triangle)
 				imageContainer.append(imageNumber)
-				image.addEventListener("click", function(event) {
+				canvas.addEventListener("click", function(event) {
 					loadingSign.style.display = "block"
-					downloadPrepper.width = this.naturalWidth
-					downloadPrepper.height = this.naturalHeight
-					context.drawImage(this, 0, 0, this.naturalWidth, this.naturalHeight)
-					downloadPrepper.toBlob(function(blob) {
+					this.toBlob(function(blob) {
 						if(filenameChooser.value == "") {
 							filename = (Date.now() + ".png").slice(2)
 						} else {

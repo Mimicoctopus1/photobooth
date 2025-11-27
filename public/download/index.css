@@ -1,159 +1,157 @@
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    text-align: center;
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	text-align: center;
 }
 
 body {
-    background-color: gray;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
+	background-color: gray;
+	display: flex;
+	flex-direction: column;
+	min-height: 100vh;
 }
 
 title {
-    display: none;
+	display: none;
 }
 
 small {
-    font-size: 0.5em;
+	font-size: 0.5em;
 }
 
 .disconnected {
-    font: 3vh sans-serif;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background-color: white;
-    line-height: 100vh;
-    vertical-align: middle;
-    display: none;
-    z-index: 3;
+	font: 3vh sans-serif;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100vh;
+	background-color: white;
+	line-height: 100vh;
+	vertical-align: middle;
+	display: none;
+	z-index: 3;
 }
 
 .loading-sign {
-    font: 10em sans-serif;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    text-align: center;
-    line-height: 100vh;
-    vertical-align: middle;
-    border: 1px solid black;
-    z-index: 2;
+	font: 10em sans-serif;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100vh;
+	text-align: center;
+	line-height: 100vh;
+	vertical-align: middle;
+	border: 1px solid black;
+	z-index: 2;
 }
 
 .loading-sign > * {
-    background-color: white;
-    border-radius: 2vw;
-    text-align: center;
+	background-color: white;
+	border-radius: 2vw;
+	text-align: center;
 }
 
 .loading-sign img {
-    width: 10vw;
+	width: 10vw;
 }
 
 .no-photos-sign {
-    display: none;
-    color: red;
+	display: none;
+	color: red;
 }
 
 .footer {
-    white-space: nowrap;
-    position: fixed;
-    width: 100vw;
-    bottom: 0;
-    left: 0;
-    display: flex;
-    z-index: 2;
-    border: 5px solid black;
-    border-top-left-radius: 5vw;
-    border-top-right-radius: 5vw;
-    background: rgba(0, 0, 0, 0.3);
-    overflow-y: hidden;
-    overflow-x: scroll;
+	white-space: nowrap;
+	position: fixed;
+	width: 100vw;
+	bottom: 0;
+	left: 0;
+	display: flex;
+	z-index: 2;
+	border: 5px solid black;
+	border-top-left-radius: 5vw;
+	border-top-right-radius: 5vw;
+	background: rgba(0, 0, 0, 0.3);
+	overflow-y: hidden;
+	overflow-x: scroll;
 }
 
 .footer > * {
-    font: 2rem sans-serif;
-    padding-left: 3vw;
-    padding-right: 3vw;
-    display: inline-block;
-    border-radius: 0;
-    background-color: rgba(80, 80, 80, 0.9);
-    height: 10vh;
-    vertical-align: middle;
-    border: 1px solid rgba(0, 0, 0, 1);
+	font: 2rem sans-serif;
+	padding-left: 3vw;
+	padding-right: 3vw;
+	display: inline-block;
+	border-radius: 0;
+	background-color: rgba(80, 80, 80, 0.9);
+	height: 10vh;
+	vertical-align: middle;
+	border: 1px solid rgba(0, 0, 0, 1);
 }
 
 .footer > * > * {
-    display: block;
+	display: block;
 }
 
 .footer > * > input {
-    width: 100%;
-    height: 2em;
+	width: 100%;
+	height: 2em;
 }
 
 .reset {
-    color: red;
-    flex-grow: 1;
-    flex-shrink: 1;
+	color: red;
+	flex-grow: 1;
+	flex-shrink: 1;
 }
 
 .download-prepper {
-    display: none;
+	display: none;
 }
 
 .downloader {
-    display: none;
+	display: none;
 }
 
 .photos {
-    position: relative;
-    margin-top: auto;
-    border-top: 1px solid black;
-    overflow: hidden;
-    border-top-left-radius: 5vw;
-    border-top-right-radius: 5vw;
+	position: relative;
+	margin-top: auto;
+	border-top: 1px solid black;
+	overflow: hidden;
+	border-top-left-radius: 5vw;
+	border-top-right-radius: 5vw;
 }
 
 .photos * {
-    vertical-align: middle;
-    display: inline-block;
-    height: 10%;
+	vertical-align: middle;
+	display: inline-block;
 }
 
 .photos > * {
-    position: relative
+	position: relative;
 }
 
-.photos > * > img {
-    width: 50vw;
+.photos > * > canvas {
+	width: 50vw;
 }
 
 .photos > * > div {
-    position: absolute;
-    right: 0;
-    top: 0;
-    z-index: 1;
+	position: absolute;
+	right: 0;
+	top: 0;
+	z-index: 1;
 }
 
 .triangle {
-    border-top: 1.5em solid white;
-    border-right: 1.5em solid white;
-    border-bottom: 1.5em solid transparent;
-    border-left: 1.5em solid transparent;
-    height: 0;
-    width: 0;
+	border-top: 1.5em solid white;
+	border-right: 1.5em solid white;
+	border-bottom: 1.5em solid transparent;
+	border-left: 1.5em solid transparent;
+	height: 0;
+	width: 0;
 }
 
-
 .image-number {
-    margin-right: 0.5em;
+	margin-right: 0.5em;
 }
