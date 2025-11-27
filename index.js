@@ -86,7 +86,8 @@ saveImages = function() {
 				console.error(error + "\nCouldn't make folder " + saveFolder)
 			}
 			photos.forEach(function(photo, index) {
-				fs.writeFile(path.join(saveFolder, index + ".png"), photo, function(error) {	
+				imageData = new Uint8Array(photo)/*Convert regular 64-bit numbers into 8-bit numbers*/
+				fs.writeFile(path.join(saveFolder, index + ".png"), imageData, function(error) {	
 					if(error) {
 						console.error(error)
 					}
@@ -184,7 +185,7 @@ stdinResponses = {
 			}
 		})
 	},
-	"remove": function() {
+	"remove": function(words) {
 		fs.rm(words[1], {
 			"recursive": true
 		}, function(error) {

@@ -129,9 +129,13 @@ takePicture = function() {
       qr.style.display = "inline-block"
       captureButton.style.display = "none"
       clearButton.style.display = "inline-block"
+			let dataURL = canvas.toDataURL("image/png")
+			let parts = dataURL.split(",")
+			let base64String = parts[parts.length - 1]
+			let dataArray = Uint8Array.fromBase64(base64String)
       ws.send(JSON.stringify({
         "type": "save image",
-        "data": canvas.toDataURL("image/png")
+        "data": Array.from(dataArray)/*Convert 8-bit numbers into regular 64-bit numbers so they can be stringified*/
       }))
     }
   }, 1000)
