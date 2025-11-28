@@ -75,19 +75,27 @@ wss.send = function(data) {
 
 verbose("|Image-saving function: saveImages")
 saveImages = function() {
-	fs.rm(saveFolder, {
-		"recursive": true,/*Delete everything inside as well*/
-		"force": true/*Allow deletion of folders as well as files*/
+	fs.mkdir(saveFolder, {
+		"recursive": true,
 	}, function(error) {
-		fs.mkdir(saveFolder, {
-			"recursive": true,
-		}, function(error) {
-			if(error) {
-				console.error(error + "\nCouldn't make folder " + saveFolder)
-			}
+		if(error) {
+			console.error(error + "\nCouldn't make folder " + saveFolder)
+		}
+		fs.readdir(saveFolder, "utf-8", function(error, files) {
+			files.sort(function(a, b) {
+				return(parseInt(a) - parseInt(b))
+			})
+			files = files.slice(photos.length)/*Get any files that will not be overwritten*/
+			files.forEach(function(file, index) {/*Delete them*/
+				fs.rm(path.join(saveFolder, file), function(error) {
+					if(error) {
+						console.error(error + "\nCould not delete file " + path.join(saveFolder, file) + ".")
+					}
+				})
+			})
+
 			photos.forEach(function(photo, index) {
-				imageData = new Uint8Array(photo)/*Convert regular 64-bit numbers into 8-bit numbers*/
-				fs.writeFile(path.join(saveFolder, index + ".png"), imageData, function(error) {	
+				fs.writeFile(path.join(saveFolder, index + ".png"), photo, function(error) {
 					if(error) {
 						console.error(error)
 					}
@@ -100,13 +108,15 @@ saveImages = function() {
 verbose("Loading photos from " + saveFolder)
 photos = []
 fs.readdir(saveFolder, "utf-8", function(error, files) {
-	if(!error) {
+	if(error) {
+		console.error(error + "\nCould not read from " + loadFrom + ".")
+	} else {
 		files.sort(function(a, b) {
 			return(parseInt(a) - parseInt(b))
 		})
 		let loadedPhotos = []
 		files.forEach(function(file) {
-			fs.readFile(path.join(saveFolder, file), "ascii", function(error, data) {
+			fs.readFile(path.join(saveFolder, file), function(error, data) {/*Read as Buffer, subclass of Uint8Array*/
 				loadedPhotos.push(data)
 				if(loadedPhotos.length == files.length) {/*If this is the last file*/
 					photos = loadedPhotos.concat(photos)
@@ -119,13 +129,16 @@ fs.readdir(saveFolder, "utf-8", function(error, files) {
 var messageResponses = {
 	"log": console.log,
 	"save image": function(data, ws) {
+		data = Uint8Array.from(data)/*Convert regular 64-bit numbers into 8-bit numbers*/
 		photos.push(data)
 		saveImages()
 	},
 	"download images": function(data, ws) {
 		ws.send(JSON.stringify({
 			"type": "download images",
-			"data": photos
+			"data": photos.map(function(photo, index) {
+				return(Array.from(photo))
+			})
 		}))
 	}
 }
@@ -174,13 +187,22 @@ stdinResponses = {
 	},
 	"load": function(words) {
 		let loadFrom = words[1] || saveFolder + ".old"
-		fs.readFile(loadFrom, "utf-8", function(error, data) {
+		fs.readdir(loadFrom, "utf-8", function(error, files) {
 			if(error) {
-				console.error(error)
+				console.error(error + "\nCould not read from " + loadFrom + ".")
 			} else {
-				let newPhotos = data.split("\n")
-				newPhotos.concat(photos)
-				photos = newPhotos
+				files.sort(function(a, b) {
+					return(parseInt(a) - parseInt(b))
+				})
+				let loadedPhotos = []
+				files.forEach(function(file) {
+					fs.readFile(path.join(saveFolder, file), function(error, data) {/*Read as Buffer, subclass of Uint8Array*/
+						loadedPhotos.push(data)
+						if(loadedPhotos.length == files.length) {/*If this is the last file*/
+							photos = loadedPhotos.concat(photos)
+						}
+					})
+				})
 				saveImages()
 			}
 		})
@@ -205,32 +227,28 @@ stdinResponses = {
 					let start = parseInt(photo.split("@")[1])
 					let amount = parseInt(photo.split("@")[0])
 					
-					photos.splice(start, amount, ...Array(amount).fill(""))
+					photos.splice(start, amount, ...Array(amount).fill(undefined))
 				} else if(photo.includes("-")) {
 					let start = parseInt(photo.split("-")[0])
 					let end = parseInt(photo.split("-")[1])
 					let amount = Math.abs(end - start) + 1
 
-					photos.splice(start, amount, ...Array(amount).fill(""))
+					photos.splice(start, amount, ...Array(amount).fill(undefined))
 				} else {
-					photos[parseInt(photo)] = ""
+					photos[parseInt(photo)] = undefined
 				}
 			})
 		} else {
-			photos = photos.map(function(photo, index) {
-				if(photo) {
-					return("")
-				}
-			})
+			photos = photos.fill(undefined)
 		}
 		
 		/*Delete all the empty photos*/
 		let deletedPhotos = 0
 		photos = photos.filter(function(photo) {
-			if(photo == "") {
+			if(photo == undefined) {
 				deletedPhotos ++
 			}
-			return (photo != "")
+			return (photo != undefined)
 		})
 
 		saveImages()

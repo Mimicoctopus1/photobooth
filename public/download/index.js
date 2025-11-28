@@ -37,46 +37,55 @@ ws.responses = {
 			noPhotosSign.style.display = "block"
 		} else {
 			data.forEach(function(photo, index) {
+				photo = Uint8Array.from(photo)/*Convert 64-bit numbers to 8-bit numbers*/
+				if(URL.createObjectURL) {/*If the browser supports it, Blob URL, otherwise, base64 DataURL*/
+					photo = URL.createObjectURL(new Blob([photo]))
+				} else {
+					photo = photo.toBase64()
+					photo = "data:image/png;base64," + photo
+				}
 				let imageContainer = document.createElement("div")
 				
 				let image = document.createElement("img")
 				image.src = photo
 				
-				let canvas = document.createElement("canvas")
-				let context = canvas.getContext("2d")
-				canvas.width = image.naturalWidth
-				canvas.height = image.naturalHeight
-				context.drawImage(image, 0, 0, canvas.width, canvas.height)
+				image.addEventListener("load", function() {
+					let canvas = document.createElement("canvas")
+					let context = canvas.getContext("2d")
+					canvas.width = image.naturalWidth
+					canvas.height = image.naturalHeight
+					context.drawImage(image, 0, 0, canvas.width, canvas.height)
+					
+					let triangle = document.createElement("div")
+					triangle.className = "triangle"
 
-				let triangle = document.createElement("div")
-				triangle.className = "triangle"
+					let imageNumber = document.createElement("div")
+					imageNumber.className = "image-number"
+					imageNumber.innerHTML = index
 
-				let imageNumber = document.createElement("div")
-				imageNumber.className = "image-number"
-				imageNumber.innerHTML = index
-				
-				photos.prepend(imageContainer)
-				imageContainer.append(canvas)
-				imageContainer.append(triangle)
-				imageContainer.append(imageNumber)
-				canvas.addEventListener("click", function(event) {
-					loadingSign.style.display = "block"
-					this.toBlob(function(blob) {
-						if(filenameChooser.value == "") {
-							filename = (Date.now() + ".png").slice(2)
-						} else {
-							filename = filenameChooser.value
-							if(filename.slice(-4) != ".png") {
-								filename += ".png"
+					photos.prepend(imageContainer)
+					imageContainer.append(canvas)
+					imageContainer.append(triangle)
+					imageContainer.append(imageNumber)
+					canvas.addEventListener("click", function(event) {
+						loadingSign.style.display = "block"
+						this.toBlob(function(blob) {
+							if(filenameChooser.value == "") {
+								filename = (Date.now() + ".png").slice(2)
+							} else {
+								filename = filenameChooser.value
+								if(filename.slice(-4) != ".png") {
+									filename += ".png"
+								}
 							}
-						}
-						download = new File([blob], filename)
-						downloadURL = URL.createObjectURL(download)
-						downloader.href = downloadURL
-						downloader.download = download.name
-						downloader.click()
-						URL.revokeObjectURL(downloadURL)
-						loadingSign.style.display = "none"
+							download = new File([blob], filename)
+							downloadURL = URL.createObjectURL(download)
+							downloader.href = downloadURL
+							downloader.download = download.name
+							downloader.click()
+							URL.revokeObjectURL(downloadURL)
+							loadingSign.style.display = "none"
+						})
 					})
 				})
 			})
