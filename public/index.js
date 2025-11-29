@@ -16,6 +16,7 @@ canvas = document.getElementsByClassName("canvas")[0]
 foreground = document.getElementsByClassName("foreground")[0]
 qrLink = document.getElementsByClassName("qr-link")[0]
 qr = document.getElementsByClassName("qr")[0]
+countdownContainer = document.getElementsByClassName("countdown-container")[0]
 countdown = document.getElementsByClassName("countdown")[0]
 foregroundSelect = document.getElementsByClassName("foreground-select")[0]
 captureButton = document.getElementsByClassName("capture")[0]
@@ -101,12 +102,12 @@ getPermissions = function() {
 takePicture = function() {
   getPermissions()
   countdown.innerHTML = captureDelay
-  countdown.style.display = "inline-block"
+  countdownContainer.style.display = "inline-block"
+	captureButton.style.display = "none"
   countdownTimer = setInterval(function() {
     countdown.innerHTML = parseInt(countdown.innerHTML) - 1
     if(parseFloat(countdown.innerHTML) <= 0) {
       clearTimeout(countdownTimer)
-      countdown.style.display = "none"
       if(!filtersSet) {
         /*Get the computed CSS filter from the video element.*/
         const videoStyles = window.getComputedStyle(video)
@@ -126,9 +127,6 @@ takePicture = function() {
 			if(foregroundSelect.value != "") {
         context.drawImage(foreground, 0, 0, width, height)
       }
-      qr.style.display = "inline-block"
-      captureButton.style.display = "none"
-      clearButton.style.display = "inline-block"
 			let dataURL = canvas.toDataURL("image/png")
 			let parts = dataURL.split(",")
 			let base64String = parts[parts.length - 1]
@@ -137,6 +135,9 @@ takePicture = function() {
         "type": "save image",
         "data": Array.from(dataArray)/*Convert 8-bit numbers into regular 64-bit numbers so they can be stringified*/
       }))
+      clearButton.style.display = "inline-block"
+    	countdownContainer.style.display = "none"
+      qr.style.display = "inline-block"
     }
   }, 1000)
 }

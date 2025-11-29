@@ -82,11 +82,13 @@ title {
 
 .countdown-container {
   text-align: center;
+  display: none;
+	flex-grow: 1;
+	flex-shrink: 1;
 }
 
 .countdown {
-  display: none;
-  width: 10vh;
+  width: 100%;
   line-height: 10vh;
   vertical-align: middle;
   color: yellow;
