@@ -109,7 +109,7 @@ verbose("Loading photos from " + saveFolder)
 photos = []
 fs.readdir(saveFolder, "utf-8", function(error, files) {
 	if(error) {
-		console.error(error + "\nCould not read from " + loadFrom + ".")
+		console.error(error + "\nCould not read from " + saveFolder + ".")
 	} else {
 		files.sort(function(a, b) {
 			return(parseInt(a) - parseInt(b))
