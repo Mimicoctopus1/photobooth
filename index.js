@@ -19,18 +19,18 @@ process.argv.forEach(function(argument, index) {
 
 
 verbose("Requiring dependencies")
-verbose("|node:path")
-var path = require("node:path")
 verbose("|express")
-var express = require("express")
+express = require("express")
 verbose("|ws")
-var WebSocket = require("ws")
+WebSocket = require("ws")
 verbose("|node:http")
-var http = require("node:http")
-verbose("|node:readline")
-var readline = require("node:readline")
+http = require("node:http")
 verbose("|node:fs")
-var fs = require("node:fs")
+fs = require("node:fs")
+verbose("|node:readline")
+readline = require("node:readline")
+verbose("|node:path")
+path = require("node:path")
 
 if(!saveFolder) {
 	saveFolder = process.env.SAVEFOLDER || path.join(".data", "photos")
