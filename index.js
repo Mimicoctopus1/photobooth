@@ -34,8 +34,10 @@ readline = require("node:readline")
 verbose("|node:path")
 path = require("node:path")
 
+verbose("Deciding on save folder")
 if(!saveFolder) {
 	saveFolder = process.env.SAVEFOLDER || path.join(".data", "photos")
+	verbose("|Files will be loaded from and saved to " + saveFolder + ".")
 }
 
 var rl = readline.createInterface({
@@ -44,30 +46,96 @@ var rl = readline.createInterface({
 	"terminal": false
 })
 
-verbose("Constructing express instance")
-var app = express()
-verbose("Constructing http server using express instance")
-var server = http.createServer(app)
-verbose("Constructing WebSocket server using http server")
+verbose("Constructing WebSocket server")
 var wss = new WebSocket.WebSocketServer({
 	"autoPong": true,
-	"server": server,
+	/*Because we may have HTTP and HTTPS servers, we cannot link the WebSocketServer with either, so we have to (later in the code) manually, rather than automatically, allow HTTP/HTTPS connections to upgrade into WebSocket connections.3
+	See https://en.wikipedia.org/wiki/WebSocket#:~:text=the%20WebSocket%20handshake%20uses%20the%20HTTP%20Upgrade%20header%5B3%5D%20to%20change%20from%20the%20HTTP%20protocol%20to%20the%20WebSocket%20protocol*/
+	"noServer": true,
 	"clientTracking": true
 })
 
-verbose("Configuring public folder for express instance")
+verbose("Checking for HTTPS credentials")
+credentials = {}
+credentialDirectory = ""
+if(process.argv.includes("--credentials")) {
+	credentialDirectory = process.argv[process.argv.indexOf("--credentials") + 1]
+}
+credentialDirectory ||= process.env.CREDENTIALS || ""
+if(credentialDirectory) {
+	credentials = {
+		"key": path.join(credentialDirectory, "privkey.pem"),
+		"cert": path.join(credentialDirectory, "cert.pem"),
+		"ca": path.join(credentialDirectory, "chain.pem")
+	}
+}
+/*Individual overrides*/
+certNames = ["key", "cert", "ca"]
+certNames.forEach(function(credential) {
+	if(process.argv.includes("--" + credential)) {
+		credentials[credential] = process.argv[process.argv.indexOf("--" + credential) + 1]
+	} else if(process.env[credential.toUpperCase()]) {
+		process.env[credential.toUpperCase()]
+	}
+})
+
+verbose("Constructing express instance")
+app = express()
+verbose("Configuring public folder for Express instance")
 app.use(express.static(path.join(__dirname, "public"), {
 	"dotfiles": "allow"
 }))/*Allow the user to access the public folder, including dotfiles (files whose names start with a period)*/
 
+verbose("Constructing HTTP server using express instance")
+server = http.createServer(app)
 verbose("Deciding which port to use")
-var port
+port = ""
 if(process.argv.includes("--port")) {
 	port = process.argv[process.argv.indexOf("--port") + 1]
 }
-port = parseInt(process.env.PORT) || port || 8080
-verbose("Listening on port " + port)
+port ||= parseInt(process.env.PORT) || 8080
+verbose("Listening on HTTP port " + port)
 server.listen(port)
+
+verbose("Preparing to convert HTTP connections to WebSocket connections")
+server.on("upgrade", function(request, socket, head) {/*Fired by "new WebSocket()" on the client side*/
+	wss.handleUpgrade(request, socket, head, function(ws) {
+		wss.emit("connection", ws, request)/*Since the WebSocketServer is not configured to be tied to the HTTP server, we have to force the connection procedure manually*/
+	})
+})
+
+numberOfCredentials = 0
+certNames.forEach(function(certName) {
+	if(credentials[certName]) {
+		fs.readFile(credentials[certName], "utf-8", function(error, data) {
+			if(error) {
+				console.error(error + "\nCould not get " + certName +  " from " + credentials[certName] + ".")
+			} else {
+				credentials[certName] = data
+				numberOfCredentials++
+				if(numberOfCredentials == 3) {
+					verbose("Constructing HTTPS server using Express instance")
+					secureServer = https.createServer(credentials, app)
+					verbose("Deciding which secure port to use")
+					securePort = ""
+					if(process.argv.includes("--secure-port")) {
+						securePort = process.argv[process.argv.indexOf("--secure-port") + 1]
+					}
+					securePort = parseInt(process.env.SECUREPORT) || securePort || 8443
+					verbose("Listening on HTTPS port " + securePort)
+					secureServer.listen(securePort)
+					
+					verbose("Preparing to convert HTTPS connections to WebSocket connections")
+					secureServer.on("upgrade", function(request, socket, head) {/*Fired by "new WebSocket()" on the client side*/
+						wss.handleUpgrade(request, socket, head, function(ws) {
+							wss.emit("connection", ws, request)/*Since the WebSocketServer is not configured to be tied to the HTTPS server, we have to force the connection procedure manually*/
+						})
+					})
+				}
+			}
+		})
+	}
+})
 
 verbose("Making functions")
 verbose("|Broadcasting function: wss.send")

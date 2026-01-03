@@ -43,8 +43,10 @@ ws.addEventListener("message", function(event) {
   }
 })
 
-ws.addEventListener("close", function() {
-  disconnected.style.display = "block"
+ws.addEventListener("open", function() {
+	ws.addEventListener("close", function() {
+		disconnected.style.display = "block"
+	})
 })
 
 context = canvas.getContext("2d")
