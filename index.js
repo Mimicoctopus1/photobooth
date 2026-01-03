@@ -54,7 +54,9 @@ var wss = new WebSocket.WebSocketServer({
 })
 
 verbose("Configuring public folder for express instance")
-app.use(express.static(path.join(__dirname, "public")))/*Allow the user to access the public folder*/
+app.use(express.static(path.join(__dirname, "public"), {
+	"dotfiles": "allow"
+}))/*Allow the user to access the public folder, including dotfiles (files whose names start with a period)*/
 
 verbose("Deciding which port to use")
 var port
