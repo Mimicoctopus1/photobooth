@@ -219,10 +219,6 @@ stdinResponses = {
 		})
 	},
 	"delete": function(words) {
-		if(Math.random() > 0.9) {
-			console.log("Yes boss.🫡")
-		}
-
 		if(words[1]) {
 			words.slice(1).forEach(function(photo) {
 				if(photo.includes("@")) {
@@ -274,11 +270,3 @@ var readInput = function() {
 	})
 }
 readInput()
-
-console.log("______________________________________________________               🛸")
-console.log("|  __       __  _____    __            _____  _____  |   ✨   👾👾")
-console.log("| |  |     |__||  ___| _|  |_   ____  |  ___||  ___| |         👾")
-console.log("| |  |      __ |  ___||_    _| /    \\ |  ___||  ___| |               ✨")
-console.log("| |  |___  |  ||  |     |  |  |  (O) ||  |   |  |    |    🚀")
-console.log("| |______| |__||__|     |__|   \\____/ |__|   |__|    |           ✨")
-console.log("|____________________________________________________|  🌍    ✨")
