@@ -49,7 +49,7 @@ var rl = readline.createInterface({
 verbose("Constructing WebSocket server")
 var wss = new WebSocket.WebSocketServer({
 	"autoPong": true,
-	/*Because we may have HTTP and HTTPS servers, we cannot link the WebSocketServer with either, so we have to (later in the code) manually, rather than automatically, allow HTTP/HTTPS connections to upgrade into WebSocket connections.3
+	/*Because we may have HTTP and HTTPS servers, we cannot link the WebSocketServer with either, so we have to (later in the code) manually, rather than automatically, allow HTTP/HTTPS connections to upgrade into WebSocket connections.
 	See https://en.wikipedia.org/wiki/WebSocket#:~:text=the%20WebSocket%20handshake%20uses%20the%20HTTP%20Upgrade%20header%5B3%5D%20to%20change%20from%20the%20HTTP%20protocol%20to%20the%20WebSocket%20protocol*/
 	"noServer": true,
 	"clientTracking": true
