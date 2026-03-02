@@ -27,7 +27,7 @@ Simply install [Node.js](https://nodejs.org) and run these commands in your term
 git clone https://codeberg.org/Mimicoctopus1/photobooth
 cd photobooth
 npm install
-npm run start # Alternatively, index.js has a shebang so you can double-click it from your file manager if you give yourself permission
+npm run start # Alternatively, index.js has a shebang so you can double-click it from your file manager.
 ```
 Then, open up [your ip address]:8080.  
 See [here](#other-ports) to use other ports.
