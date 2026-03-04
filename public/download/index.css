@@ -138,18 +138,31 @@ small {
 
 .photos > * > div {
 	position: absolute;
-	right: 0;
-	top: 0;
 	z-index: 1;
+	top: 0;
+}
+
+.photos > *:nth-child(odd) > div {
+	right: 0;
+}
+
+.photos > *:nth-child(even) > div {
+	left: 0;
 }
 
 .triangle {
-	border-top: 1.5em solid white;
-	border-right: 1.5em solid white;
-	border-bottom: 1.5em solid transparent;
-	border-left: 1.5em solid transparent;
+	border: 1.5em solid white;
+	border-bottom-color: transparent;
 	height: 0;
 	width: 0;
+}
+
+.photos > *:nth-child(odd) > .triangle {
+	border-left-color: transparent;
+}
+
+.photos > *:nth-child(even) > .triangle {
+	border-right-color: transparent;
 }
 
 .image-number {
