@@ -330,6 +330,9 @@ stdinResponses = {
 		wss.clients.forEach(function(ws) {
 			ws.close()
 		})
+	},
+	"exit": function(words) {
+		process.exit(words[1] || 0)
 	}
 }
 
