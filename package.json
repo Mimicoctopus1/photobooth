@@ -9,6 +9,9 @@
 	},
 	"dependencies": {
 		"express": "^5.1.0",
+		"ipp-encoder": "^5.0.0",
+		"multicast-dns": "^7.2.5",
+		"pdfkit": "^0.18.0",
 		"ws": "^8.18.3"
 	},
 	"devDependencies": {
