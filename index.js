@@ -182,7 +182,7 @@ photos = []
 fs.readdir(saveFolder, "utf-8", function(error, files) {
 	if(error) {
 		if(error.code != "ENOENT") {
-			console.error(error + "\nCould not read from " + saveFolder + ".")
+			console.error(error + "\nDoes " + saveFolder + " exist?")
 		}
 	} else {
 		files.sort(function(a, b) {
