@@ -10,15 +10,25 @@
     <div class="disconnected"><span>You have been disconnected. <a href=".">Refresh</a> to try to rejoin.</span></div>
     <video class="video">Video stream not available.</video>
     <img class="foreground" src="">
-    <a class="qr-link"><div class="qr"></div></a>
     <footer class="footer">
-        <select class="foreground-select">
-            <option value="">No Foreground</option>
-        </select>
-        <div class="countdown-container"><span class="countdown"></span></div>
-        <input type="button" class="capture" value="Take Picture 📷">
-        <input type="button" class="clear" value="Clear🗑️">
+		<div class="pre-capture variable-options">
+			<select class="foreground-select">
+				<option value="">No Foreground</option>
+			</select>
+			<input type="button" class="capture" value="Take Picture📷">
+		</div>
+		<div class="mid-capture variable-options">
+			<div class="countdown-container"><span class="countdown"></span></div>
+		</div>
+		<div class="post-capture variable-options">
+			<input type="button" class="clear" value="Clear🗑️">
+			<input class="upload-button" type="button" value="Upload🌐">
+			<input class="print-button" type="button" value="Print🖨️">
+		</div>
     </footer>
+	<div class="qr-container">
+	       <a class="qr-link"><div class="qr"></div></a>
+	</div>
     <canvas class="canvas"></canvas>
 
     <script src="https://cdn.jsdelivr.net/gh/davidshimjs/qrcodejs/qrcode.js"></script>

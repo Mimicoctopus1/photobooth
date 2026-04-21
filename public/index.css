@@ -54,7 +54,7 @@ title {
   bottom: 0;
   left: 0;
   display: flex;
-  z-index: 3;
+  z-index: 4;
   border: 5px solid black;
   border-top-left-radius: 5vw;
   border-top-right-radius: 5vw;
@@ -62,52 +62,82 @@ title {
   overflow: hidden;
 }
 
-.footer * {
-  display: inline-block;
-  background-color: rgba(80, 80, 80, 0.9);
-  height: 10vh;
-  max-height: 10vh;
-  border: 1px solid rgba(0, 0, 0, 1);
-  border-radius: 0;
-  font: 2em sans-serif;
+.footer *:not(.countdown-container):not(.countdown) {
+	display: inline-block;
+	background-color: rgba(80, 80, 80, 0.9);
+	height: 10vh;
+	max-height: 10vh;
+	border: 1px solid rgba(0, 0, 0, 1);
+	border-radius: 0;
+	font: 5vh sans-serif;
 }
 
-.qr {
-  position: fixed;
-  top: 0;
-  right: 0;
-  display: none;
-  z-index: 4;
+.variable-options {
+	width: auto;
+	flex-grow: 1;
+	flex-shrink: 1;
+	display: flex;
+}
+
+.variable-options * {
+	height: 100%;
+	display: flex;
+	flex-grow: 1;
+	flex-shrink: 1
 }
 
 .countdown-container {
-  text-align: center;
-  display: none;
-	flex-grow: 1;
-	flex-shrink: 1;
+	display: block;
+	text-align: center;
+	line-height: 10vh;
+	vertical-align: middle;
 }
 
 .countdown {
-  width: 100%;
-  line-height: 10vh;
-  vertical-align: middle;
-  color: yellow;
+	display: inline-block;
+	color: yellow;
 }
 
 .capture {
   color: green;
-  flex-grow: 1;
-  flex-shrink: 1;
 }
 
 .clear {
-  display: none;
   color: red;
-  flex-grow: 1;
-  flex-shrink: 1;
+}
+
+.qr-container {
+	position: fixed;
+	display: none;
+	z-index: 3; 
+	left: 0;
+	top: 0;
+	width: 100vw;
+	height: 100vh;
+	line-height: 90vh;
+	text-align: center;
+}
+
+.qr-link {
+	display: inline-block;
+	min-width: 50vw;
+	min-height: 50vh;
+	max-width: 50vw;
+	max-height: 50vh;
+	text-align: center;
+	vertical-align: middle;
+}
+
+.qr {
+	background-color: rgba(127, 127, 127);
+	display: inline-block;
+	object-fit: contain;
+	border-radius: 10vw;
+	padding: 5vw;
 }
 
 .canvas {
 	position: fixed;
 	z-index: 2;
 }
+

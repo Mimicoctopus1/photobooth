@@ -9,20 +9,35 @@ width = window.innerWidth
 height = 0/*Will be computed later*/
 permission = false
 filtersSet = false
+dataArray = false/*Used to store the most recently taken photo*/
+printAfterUpload = false/*Used to determine if the photo should be printed as soon as it is uplaoded*/
+uploadedFile = false/*Used to store the name of the most recently uploaded file*/
 
 disconnected = document.getElementsByClassName("disconnected")[0]
 video = document.getElementsByClassName("video")[0]
 canvas = document.getElementsByClassName("canvas")[0]
 foreground = document.getElementsByClassName("foreground")[0]
-qrLink = document.getElementsByClassName("qr-link")[0]
-qr = document.getElementsByClassName("qr")[0]
 countdownContainer = document.getElementsByClassName("countdown-container")[0]
 countdown = document.getElementsByClassName("countdown")[0]
 foregroundSelect = document.getElementsByClassName("foreground-select")[0]
+preCapture = document.getElementsByClassName("pre-capture")[0]
+midCapture = document.getElementsByClassName("mid-capture")[0]
+postCapture = document.getElementsByClassName("post-capture")[0]
 captureButton = document.getElementsByClassName("capture")[0]
 clearButton = document.getElementsByClassName("clear")[0]
+qrContainer = document.getElementsByClassName("qr-container")[0]
+qrLink = document.getElementsByClassName("qr-link")[0]
+qr = document.getElementsByClassName("qr")[0]
+uploadButton = document.getElementsByClassName("upload-button")[0]
+printButton = document.getElementsByClassName("print-button")[0]
 
 ws.responses = {
+	"upload": function(data) {
+		uploadedFile = data
+		if(printAfterUpload) {
+			print(uploadedFile)
+		}
+	},
 	"foregrounds": function(data) {
 		data.forEach(function(foregroundName, index) {
 			let foregroundElement = document.createElement("option")
@@ -55,9 +70,9 @@ if(flipVideo) {
 }
 
 qrcode = new QRCode(qr, {
-  text: document.location + "/download",
-  colorDark: "#000000",
-  colorLight: "#ffffff"
+	"text": document.location + "/download",
+	"colorDark": "#000000",
+	"colorLight": "#ffffff"
 })
 qrLink.href = document.location + "/download"
 
@@ -75,10 +90,16 @@ video.addEventListener("canplay", function(event) {
 })
 
 clearPicture = function() {
-  context.clearRect(0, 0, canvas.width, canvas.height)
-  qr.style.display = "none"
-  captureButton.style.display = "inline-block"
-  clearButton.style.display = "none"
+	context.clearRect(0, 0, canvas.width, canvas.height)
+
+	dataArray = false
+	printAfterUpload = false
+	uploadedFile = false
+	
+	preCapture.style.display = "flex"
+	midCapture.style.display = "none"
+	postCapture.style.display = "none"
+	qrContainer.style.display = "none"
 }
 
 requestPermissions = function() {
@@ -102,46 +123,58 @@ getPermissions = function() {
 }
 
 takePicture = function() {
-  getPermissions()
-  countdown.innerHTML = captureDelay
-  countdownContainer.style.display = "inline-block"
-	captureButton.style.display = "none"
-  countdownTimer = setInterval(function() {
-    countdown.innerHTML = parseInt(countdown.innerHTML) - 1
-    if(parseFloat(countdown.innerHTML) <= 0) {
-      clearTimeout(countdownTimer)
-      if(!filtersSet) {
-        /*Get the computed CSS filter from the video element.*/
-        const videoStyles = window.getComputedStyle(video)
-        const filterValue = videoStyles.getPropertyValue("filter")
-        /*Apply the filter to the canvas drawing context.
-        If there's no filter (i.e., it returns "none"), default to "none".*/
-        context.filter = filterValue || "none"
-        filtersSet = true
-      }
-      
+	getPermissions()
+	countdown.innerHTML = captureDelay
+
+	preCapture.style.display = "none"
+	midCapture.style.display = "flex"
+	postCapture.style.display = "none"
+	qrContainer.style.display = "none"
+
+	countdownTimer = setInterval(function() {
+		countdown.innerHTML = parseInt(countdown.innerHTML) - 1
+		if(parseFloat(countdown.innerHTML) <= 0) {
+			clearTimeout(countdownTimer)
+			if(!filtersSet) {
+				/*Get the computed CSS filter from the video element.*/
+				const videoStyles = window.getComputedStyle(video)
+				const filterValue = videoStyles.getPropertyValue("filter")
+				/*Apply the filter to the canvas drawing context.
+				If there's no filter (i.e., it returns "none"), default to "none".*/
+				context.filter = filterValue || "none"
+				filtersSet = true
+			}
+
 			if(flipVideo) {
 				context.save()
-      	context.scale(-1, 1)
-      	context.drawImage(video, 0, 0, -width, height)
+				context.scale(-1, 1)
+				context.drawImage(video, 0, 0, -width, height)
 				context.restore()
 			}
 			if(foregroundSelect.value != "") {
-        context.drawImage(foreground, 0, 0, width, height)
-      }
+				context.drawImage(foreground, 0, 0, width, height)
+			}
 			let dataURL = canvas.toDataURL("image/png")
 			let parts = dataURL.split(",")
 			let base64String = parts[parts.length - 1]
-			let dataArray = Uint8Array.fromBase64(base64String)
-      ws.send(JSON.stringify({
-        "type": "save image",
-        "data": Array.from(dataArray)/*Convert 8-bit numbers into regular 64-bit numbers so they can be stringified*/
-      }))
-      clearButton.style.display = "inline-block"
-    	countdownContainer.style.display = "none"
-      qr.style.display = "inline-block"
-    }
-  }, 1000)
+			dataArray = Uint8Array.fromBase64(base64String)
+
+			preCapture.style.display = "none"
+			midCapture.style.display = "none"
+			postCapture.style.display = "flex"
+			qrContainer.style.display = "none"
+		}
+	}, 1000)
+} 
+
+print = function(file) {
+	ws.send(JSON.stringify({
+		"type": "print",
+		"data": {
+			"file": file,
+			"copies": 1/*May add customization later*/
+		}
+	}))
 }
 
 foregroundSelect.addEventListener("input", function() {
@@ -151,6 +184,32 @@ foregroundSelect.addEventListener("input", function() {
   } else {
     foreground.style.display = "none"
   }
+})
+
+uploadButton.addEventListener("click", function() {
+	if(dataArray) {
+		if(qrContainer.style.display != "block") { 
+			ws.send(JSON.stringify({
+				"type": "upload",
+				"data": Array.from(dataArray)/*Convert 8-bit numbers into regular 64-bit numbers so they can be stringified*/
+			}))
+		}
+		uploadButton.originalValue ||= uploadButton.value
+		uploadButton.value = "✅"
+		setTimeout(function() {
+			uploadButton.value = uploadButton.originalValue
+		}, 5000)
+		qrContainer.style.display = "block"
+	}
+})
+
+printButton.addEventListener("click", function(event) {
+	if(uploadedFile) {
+		print(uploadedFile)
+	} else {
+		printAfterUpload = true
+		uploadButton.click()
+	}
 })
 
 getPermissions()
@@ -163,3 +222,4 @@ if(reloadEachTime) {
   clearButton.addEventListener("click", clearPicture)
 }
 captureButton.addEventListener("click", takePicture)
+

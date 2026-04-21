@@ -419,7 +419,7 @@ print = function(bufferToPrint, printerUri, customOptions, verbosity) {
 	printRequest.end()
 }
 verbose("|Image-saving function: saveImages")
-saveImages = function() {
+saveImages = function(callback) {
 	fs.mkdir(saveFolder, {
 		"recursive": true,
 	}, function(error) {
@@ -427,10 +427,15 @@ saveImages = function() {
 			console.error(error + "\nCouldn't make folder " + saveFolder)
 		}
 		fs.readdir(saveFolder, "utf-8", function(error, files) {
-			files.sort(function(a, b) {
-				return(parseInt(a) - parseInt(b))
+			let toDelete = []
+
+			files.filter(function(file) {
+				if(photos[file]) {
+					return(false)
+				} else {
+					return(true)
+				}
 			})
-			files = files.slice(photos.length)/*Get any files that will not be overwritten*/
 			files.forEach(function(file, index) {/*Delete them*/
 				fs.rm(path.join(saveFolder, file), function(error) {
 					if(error) {
@@ -439,10 +444,10 @@ saveImages = function() {
 				})
 			})
 
-			photos.forEach(function(photo, index) {
-				fs.writeFile(path.join(saveFolder, index + ".png"), photo, function(error) {
+			Object.keys(photos).forEach(function(photo, index) {
+				fs.writeFile(path.join(saveFolder, photo), photos[photo], function(error) {
 					if(error) {
-						console.error(error)
+						console.error(error + "\nCould not save photo " + path.join(saveFolder, photo) + ".")
 					}
 				})
 			})
@@ -451,7 +456,7 @@ saveImages = function() {
 }
 
 verbose("Loading photos from " + saveFolder)
-photos = []
+photos = {}
 fs.readdir(saveFolder, "utf-8", function(error, files) {
 	if(error) {
 		if(error.code != "ENOENT") {
@@ -461,13 +466,9 @@ fs.readdir(saveFolder, "utf-8", function(error, files) {
 		files.sort(function(a, b) {
 			return(parseInt(a) - parseInt(b))
 		})
-		let loadedPhotos = []
 		files.forEach(function(file) {
 			fs.readFile(path.join(saveFolder, file), function(error, data) {/*Read as Buffer, subclass of Uint8Array*/
-				loadedPhotos.push(data)
-				if(loadedPhotos.length == files.length) {/*If this is the last file*/
-					photos = loadedPhotos.concat(photos)
-				}
+				photos[file] = data
 			})
 		})
 	}
@@ -475,18 +476,34 @@ fs.readdir(saveFolder, "utf-8", function(error, files) {
 
 var messageResponses = {
 	"log": console.log,
-	"save image": function(data, ws) {
+	"upload": function(data, ws) {
 		data = Uint8Array.from(data)/*Convert regular 64-bit numbers into 8-bit numbers*/
-		photos.push(data)
+		let file = Date.now() + ".png"
+		photos[file] = data
 		saveImages()
-	},
-	"download images": function(data, ws) {
 		ws.send(JSON.stringify({
-			"type": "download images",
-			"data": photos.map(function(photo, index) {
-				return(Array.from(photo))
-			})
+			"type": "upload",
+			"data": file
 		}))
+	},
+	"download": function(data, ws) {
+		convertedPhotos = {}
+		Object.keys(photos).forEach(function(file) {
+			convertedPhotos[file] = Array.from(photos[file])
+		})
+		ws.send(JSON.stringify({
+			"type": "download",
+			"data": convertedPhotos
+		}))
+	},
+	"print": function(data, ws) {
+		if(printer) {
+	  		convert("png", "pdfBuffer", data.file, function(bufferToPrint) {
+	  			print(bufferToPrint, printer, {
+					"copies": data.copies
+				})
+	  		})
+		}
 	}
 }
 
@@ -505,7 +522,9 @@ wss.on("connection", function(ws) {
 	ws.addEventListener("message", function(event) {
 		let type = JSON.parse(event.data).type
 		let data = JSON.parse(event.data).data
-		messageResponses[type](data, ws)
+		if(messageResponses[type]) {
+			messageResponses[type](data, ws)
+		}
 	})
 	
 	ws.addEventListener("close", function() {
@@ -518,10 +537,10 @@ wss.on("connection", function(ws) {
 
 stdinResponses = {
 	"users": function(words) {
-		console.log(wss.clients.size + " users")
+		console.log(wss.clients.size)
 	},
 	"photos": function(words) {
-		console.log(photos.length + " photo")
+		console.log(Object.keys(photos).length)
 	},
 	"backup": function(words) {
 		fs.cp(saveFolder, words[1] || saveFolder + ".old", {
@@ -541,13 +560,9 @@ stdinResponses = {
 				files.sort(function(a, b) {
 					return(parseInt(a) - parseInt(b))
 				})
-				let loadedPhotos = []
 				files.forEach(function(file) {
 					fs.readFile(path.join(saveFolder, file), function(error, data) {/*Read as Buffer, subclass of Uint8Array*/
-						loadedPhotos.push(data)
-						if(loadedPhotos.length == files.length) {/*If this is the last file*/
-							photos = loadedPhotos.concat(photos)
-						}
+						photos[file] = data
 					})
 				})
 				saveImages()
@@ -563,41 +578,40 @@ stdinResponses = {
 			}
 		})
 	},
-	"delete": function(words) {
+	"delete": function(words) {	
+		let deletedPhotos = 0
 		if(words[1]) {
 			words.slice(1).forEach(function(photo) {
 				if(photo.includes("@")) {
 					let start = parseInt(photo.split("@")[1])
 					let amount = parseInt(photo.split("@")[0])
 					
-					photos.splice(start, amount, ...Array(amount).fill(undefined))
+					Object.keys(photos).slice(start, amount, ...Array(amount)).forEach(function(file) {
+						delete photos[file]
+					})
 				} else if(photo.includes("-")) {
 					let start = parseInt(photo.split("-")[0])
 					let end = parseInt(photo.split("-")[1])
 					let amount = Math.abs(end - start) + 1
 
-					photos.splice(start, amount, ...Array(amount).fill(undefined))
+					Object.keys(photos).slice(start, amount, ...Array(amount)).forEach(function(file) {
+						deletedPhotos ++
+						delete photos[file]
+					})
 				} else {
-					photos[parseInt(photo)] = undefined
+					deletedPhotos ++
+					delete photos[photo]
 				}
 			})
 		} else {
-			photos = photos.fill(undefined)
+			deletedPhotos += Object.keys(photos).length
+			photos = {}
 		}
-		
-		/*Delete all the empty photos*/
-		let deletedPhotos = 0
-		photos = photos.filter(function(photo) {
-			if(photo == undefined) {
-				deletedPhotos ++
-			}
-			return (photo != undefined)
-		})
 
 		saveImages()
 
 		console.log("Deleted " + deletedPhotos + " photos")
-		console.log(photos.length + " photos remaining")
+		console.log(Object.keys(photos).length + " photos remaining")
 	},
 	"convert": function(words) {
 		convert(...(words.slice(1)))
@@ -705,7 +719,7 @@ stdinResponses = {
 
 var readInput = function() {
 	rl.question("", function(answer) {
-		if(answer.split(" ")[0] in stdinResponses) {
+		if(stdinResponses[answer.split(" ")[0]]) {
 			stdinResponses[answer.split(" ")[0]](answer.split(" "))
 		}
 		readInput()

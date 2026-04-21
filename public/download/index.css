@@ -136,35 +136,14 @@ small {
 	width: 50vw;
 }
 
-.photos > * > div {
+.filename {
+	background-color: rgba(255, 255, 255, 0.9);
 	position: absolute;
 	z-index: 1;
-	top: 0;
-}
-
-.photos > *:nth-child(odd) > div {
-	right: 0;
-}
-
-.photos > *:nth-child(even) > div {
 	left: 0;
+	width: 90%;
+	padding: 2vw;
+	border-radius: 5vw;
+	margin: 5%;
 }
 
-.triangle {
-	border: 1.5em solid white;
-	border-bottom-color: transparent;
-	height: 0;
-	width: 0;
-}
-
-.photos > *:nth-child(odd) > .triangle {
-	border-left-color: transparent;
-}
-
-.photos > *:nth-child(even) > .triangle {
-	border-right-color: transparent;
-}
-
-.image-number {
-	margin-right: 0.5em;
-}
