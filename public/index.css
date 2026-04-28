@@ -1,9 +1,10 @@
 * {
-  margin: 0;
-  padding: 0;
-  display: block;
-  box-sizing: border-box;
-  max-width: 100vw;
+	margin: 0;
+	padding: 0;
+	display: block;
+	box-sizing: border-box;
+	max-width: 100vw;
+	user-select: none;
 }
 
 body {
@@ -15,22 +16,22 @@ title {
 }
 
 .disconnected {
-  font: 3vh sans-serif;
-  z-index: 999;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: white;
-  text-align: center;
-  line-height: 100vh;
-  vertical-align: middle;
-  display: none;
+	font: 3vh sans-serif;
+	z-index: 999;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100vh;
+	background: white;
+	text-align: center;
+	line-height: 100vh;
+	display: none;
 }
 
 .disconnected * {
-  display: inline;
+	display: inline;
+	vertical-align: middle;
 }
 
 .video {
@@ -48,13 +49,24 @@ title {
   z-index: 1;
 }
 
+.quote {
+	display: none;
+	position: fixed;
+	top: 0;
+	left: 0;
+	z-index: 2;
+	text-align: center;
+	text-wrap: wrap;
+	font: 15px cursive;
+}
+
 .footer {
   position: fixed;
   width: 100vw;
   bottom: 0;
   left: 0;
   display: flex;
-  z-index: 4;
+  z-index: 5;
   border: 5px solid black;
   border-top-left-radius: 5vw;
   border-top-right-radius: 5vw;
@@ -62,7 +74,7 @@ title {
   overflow: hidden;
 }
 
-.footer *:not(.countdown-container):not(.countdown):not(.random-quote-toggle) {
+.footer *:not(.countdown-container):not(.countdown) {
 	display: inline-block;
 	background-color: rgba(80, 80, 80, 0.9);
 	height: 10vh;
@@ -72,14 +84,14 @@ title {
 	font: 5vh sans-serif;
 }
 
-.variable-options {
+.variable-option {
 	width: auto;
 	flex-grow: 1;
 	flex-shrink: 1;
 	display: flex;
 }
 
-.variable-options * {
+.variable-option * {
 	height: 100%;
 	display: flex;
 	flex-grow: 1;
@@ -90,11 +102,11 @@ title {
 	display: block;
 	text-align: center;
 	line-height: 10vh;
-	vertical-align: middle;
 }
 
 .countdown {
 	display: inline-block;
+	vertical-align: middle;
 	color: yellow;
 }
 
@@ -106,38 +118,119 @@ title {
   color: red;
 }
 
-.qr-container {
+.popups-container-container {
 	position: fixed;
-	display: none;
-	z-index: 3; 
+	display: block;
 	left: 0;
 	top: 0;
 	width: 100vw;
-	height: 100vh;
+	height: 90vh;
+	z-index: 4; 
 	line-height: 90vh;
 	text-align: center;
 }
 
-.qr-link {
+.popups-container {
 	display: inline-block;
-	min-width: 50vw;
-	min-height: 50vh;
-	max-width: 50vw;
-	max-height: 50vh;
-	text-align: center;
+	height: 50vh;
+	line-height: initial;
 	vertical-align: middle;
+	overflow: auto;
+}
+
+.popups {
+	display: flex;
+	height: 100%;
+}
+
+.popup {
+	display: none;
+	height: 100%;
+	padding: 5vw;
+  	border: 5px solid black;
+	border-radius: 5vw;
+	overflow: scroll;
+	background-color: rgba(127, 127, 127);
+	flex-shrink: 0;
+}
+
+.popup-heading {
+	z-index: 1;
+	position: sticky;
+	top: 0;
+}
+
+.popup-content {
+	vertical-align: center;
+}
+
+.close-popup {
+	position: absolute;
+	top: 0;
+	right: 0;
+}
+
+.foreground-clear {
+	color: red;
+	border-radius: 40px;
+	background: rgba(0, 0, 0, 0.3);
+	font-size: 3em;
+}
+
+.foreground-option {
+	position: relative;
+	display: inline-block;
+	width: 50%;
+}
+
+.foreground-heading {
+	z-index: 1;
+	text-align: center;
+	position: absolute;
+	left: 0;
+	padding: 5%;
+	border-radius: 40px;
+	width: 90%;
+	margin: 5%;
+	background-color: rgba(255, 255, 255, 0.9);
+}
+
+.foreground-preview {
+	width: 100%;
+}
+
+.quote-select .popup-content > * {
+	padding: 3%;
+	border-radius: 40px;
+	width: 100%;
+	text-align: center;
+}
+
+.quote-select .popup-content > *:not(.quote-option) {
+	font-size: 1.5em;
+}
+
+.quote-clear {
+	color: red;
+	background: rgba(0, 0, 0, 0.3);
+}
+
+.quote-search {
+	left: 0;
+}
+
+.quote-option {
+	left: 0;
+	background-color: rgba(255, 255, 255, 0.9);
 }
 
 .qr {
-	background-color: rgba(127, 127, 127);
-	display: inline-block;
 	object-fit: contain;
-	border-radius: 10vw;
 	padding: 5vw;
 }
 
 .canvas {
 	position: fixed;
-	z-index: 2;
+	z-index: 3;
 }
 

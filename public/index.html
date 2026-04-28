@@ -10,24 +10,56 @@
     <div class="disconnected"><span>You have been disconnected. <a href=".">Refresh</a> to try to rejoin.</span></div>
     <video class="video">Video stream not available.</video>
     <img class="foreground" src="">
+    <div class="quote" draggable="true"></div>
     <footer class="footer">
-		<div class="pre-capture variable-options">
-			<select class="foreground-select">
-				<option value="">No Foreground</option>
-			</select>
+		<div class="variable-option pre-capture">
+			<input type="button" class="foreground-change" value="Change Foreground🖼️">
+			<input type="button" class="quote-change" value="Change Quote🪶">
 			<input type="button" class="capture" value="Take Picture📷">
 		</div>
-		<div class="mid-capture variable-options">
+		<div class="variable-option mid-capture">
 			<div class="countdown-container"><span class="countdown"></span></div>
 		</div>
-		<div class="post-capture variable-options">
+		<div class="variable-option post-capture">
 			<input type="button" class="clear" value="Clear🗑️">
 			<input class="upload-button" type="button" value="Upload🌐">
 			<input class="print-button" type="button" value="Print🖨️">
 		</div>
     </footer>
-	<div class="qr-container">
-	       <a class="qr-link"><div class="qr"></div></a>
+	<div class="popups-container-container">
+		<div class="popups-container">
+			<div class="popups">
+				<div class="popup foreground-select">
+					<div class="popup-heading">
+						<h1>Foregrounds🖼️</h1>
+						<span class="close-popup">❌</span><br>
+					</div>
+					<div class="popup-content">
+						<span class="foreground-clear">Clear Foreground🗑️</span>
+					</div>
+				</div>
+    				<div class="popup quote-select">
+					<div class="popup-heading">
+						<h1>Quotes🪶</h1>
+						<span class="close-popup">❌</span><br>
+					</div>
+					<div class="popup-content">
+						<input class="quote-reposition" type="button" value="Reposition✥">
+						<span class="quote-clear">Clear Quote🗑️</span>
+						<input class="quote-search" placeholder="Search🔎">
+					</div>
+				</div>	
+				<div class="popup qr-container">
+					<div class="popup-heading">
+						<h1>Scan to Download!</h1>
+						<span class="close-popup">❌</span>
+					</div>
+					<div class="popup-content">
+						<a class="qr-link"><div class="qr"></div></a>
+					</div>
+				</div>
+			</div>
+		</div>
 	</div>
     <canvas class="canvas"></canvas>
 

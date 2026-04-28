@@ -509,14 +509,16 @@ var messageResponses = {
 
 verbose("Setting up WebSocket events")
 wss.on("connection", function(ws) {
-	fs.readdir("public/assets", "utf-8", function(error, data) {
-		if(error) {
-			console.error(error)
-		}
-		ws.send(JSON.stringify({
-			"type": "foregrounds",
-			"data": data
-		}))
+	["foregrounds", "quotebooks"].forEach(function(directory) {
+		fs.readdir(path.join("public", "assets", directory), "utf-8", function(error, data) {
+			if(error) {
+				console.error(error)
+			}
+			ws.send(JSON.stringify({
+				"type": directory,
+				"data": data
+			}))
+		})
 	})
 
 	ws.addEventListener("message", function(event) {
