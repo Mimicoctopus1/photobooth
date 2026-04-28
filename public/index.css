@@ -62,7 +62,7 @@ title {
   overflow: hidden;
 }
 
-.footer *:not(.countdown-container):not(.countdown) {
+.footer *:not(.countdown-container):not(.countdown):not(.random-quote-toggle) {
 	display: inline-block;
 	background-color: rgba(80, 80, 80, 0.9);
 	height: 10vh;
@@ -83,7 +83,7 @@ title {
 	height: 100%;
 	display: flex;
 	flex-grow: 1;
-	flex-shrink: 1
+	flex-shrink: 1;
 }
 
 .countdown-container {
